@@ -16,16 +16,18 @@ Every artifact is a plain markdown file on your disk. You do not need an account
 
 ```mermaid
 flowchart LR
-    A["1. Intake"] --> B["2. Plan"]
-    B --> C["3. Lesson note"]
-    C --> D["4. Quiz"]
-    D --> E{"Score >= 70%?"}
-    E -- "no" --> F["Re-teach gaps"]
+    A["1. Interview<br/>the user"] --> B["2. Write<br/>the plan"]
+    B --> C["3. Write<br/>the lesson"]
+    C --> D["4. Quiz<br/>the user"]
+    D --> E{"Score:<br/>70% or more?"}
+    E -- "No" --> F["Teach the weak<br/>topics again"]
     F --> D
-    E -- "yes" --> G["Schedule review"]
-    G --> H["Spaced repetition"]
+    E -- "Yes" --> G["5. Schedule<br/>the reviews"]
+    G --> H["6. Review after<br/>1 to 90 days"]
     H --> C
 ```
+
+*Figure: One topic moves through the loop. If the quiz score is less than 70%, the tutor teaches the weak topics again and gives a new quiz. After you pass, the tutor schedules the reviews for the next days, and the next topic starts.*
 
 ## What you get
 
