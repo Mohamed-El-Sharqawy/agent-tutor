@@ -1,11 +1,12 @@
 name: demo-gif
 
-# Re-render demo/demo.gif whenever the tape or script changes.
-# Runs vhs in its official container image — no local deps.
+# Re-render demo/demo.gif inside the PR that changed the tape.
+# Branch rules require all changes to land via PR (no direct pushes to
+# main), so the render commits to the PR's own branch instead of main —
+# the merged PR carries the fresh gif. Fork PRs get the gif as an artifact.
 
 on:
-  push:
-    branches: [main]
+  pull_request:
     paths: ["demo/demo.tape", "demo/tutor.sh", ".github/workflows/demo-gif.yml"]
   workflow_dispatch:
 
@@ -17,16 +18,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Render demo.gif with vhs
         run: |
           docker run --rm -v "$PWD:/vhs" ghcr.io/charmbracelet/vhs demo/demo.tape
 
-      - name: Commit if changed
+      # Same-repo PRs: commit the rendered gif back to the PR branch
+      # (the push re-triggers validate/check on the updated tree).
+      - name: Commit render to the PR branch
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add demo/demo.gif
-          git diff --cached --quiet && echo "no change" && exit 0
+          if git diff --cached --quiet; then
+            echo "render unchanged"
+            exit 0
+          fi
           git commit -m "chore: re-render demo/demo.gif"
           git push
+
+      # Fork PRs: no write access to the branch — attach the gif as an
+      # artifact so the maintainer can commit it after review.
+      - name: Upload render as artifact (fork PRs)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-gif
+          path: demo/demo.gif
