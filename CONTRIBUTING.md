@@ -35,17 +35,18 @@ examples/vault/            ← the sample Obsidian vault (rendered on Pages)
 
 ## The dev loop
 
-```bash
-# 1. Edit files under skills/  (never the generated copies)
+**You do not need to test anything locally.** Edit what you want (for skills, edit under `skills/` — never the generated copies), push, open the PR. CI does the rest:
 
-# 2. Re-sync the generated copies
-node scripts/sync-skills.mjs
+| CI check | What it validates | If it fails |
+|---|---|---|
+| `validate` | skill spec (name/description/version), template links, skill self-containment, sync drift, Mermaid diagrams, example-vault wikilinks, issue templates | The failing check's message names the exact file and fix |
+| `check` | generated-copy drift + skills-CLI discovery of all three skills | **Drift is auto-fixed**: the bot commits the synced copies to your PR branch — you usually do nothing |
 
-# 3. Smoke test — the skills CLI must discover all three skills
-npx -y skills@latest add . --list
-```
+Notes:
 
-If you changed a skill's behavior, also check the plain fallback path (no pi tools): every pi-tool mention in a skill must have a markdown/chat fallback that works without it.
+- Even the skills-CLI discovery smoke test runs in CI. The only thing left for you is the human part: does the change teach well?
+- If a PR changes skill *behavior*, reviewers check that every pi-tool mention still has a plain markdown/chat fallback that works without it.
+- Want a fast local pass anyway (optional)? `npm run check` runs the same validator, `npm run sync` fixes drift — but CI will catch both for you.
 
 ## Pull requests
 
@@ -53,7 +54,7 @@ If you changed a skill's behavior, also check the plain fallback path (no pi too
 - Skills stay **agent-agnostic**: no agent-specific tool may be required, only preferred.
 - Vault writes stay under `Learning/` only.
 - PR body should include: what changed, how you tested it (which agent), and for behavior changes — a short transcript or note excerpt.
-- CI must pass (it checks sync drift + skill discovery).
+- CI validates everything (see the dev loop above) — merges wait for green checks.
 
 ## Reporting issues
 
