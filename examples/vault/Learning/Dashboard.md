@@ -9,6 +9,25 @@ tags: [learning, dashboard]
 > [!info] Control center
 > The tutor reads this file at the start of every session. Keep it true.
 
+## 📊 Progress
+
+![[Learning/Rust/assets/progress.svg]]
+
+```mermaid
+pie showData
+    title Topic completion — Rust
+    "Completed" : 1
+    "Remaining" : 13
+```
+
+```mermaid
+xychart-beta
+    title "Reviews due — next 7 days"
+    x-axis ["Thu 20", "Fri 21", "Sat 22", "Sun 23", "Mon 24", "Tue 25", "Wed 26"]
+    y-axis "Notes due" 0 --> 3
+    bar [1, 1, 0, 0, 0, 0, 0]
+```
+
 ## 📚 Active subjects
 
 | Subject | Phase | Progress | Next up | Last activity |

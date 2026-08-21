@@ -9,6 +9,18 @@ tags: [learning, dashboard]
 > [!info] Control center
 > The tutor reads this file at the start of every session. Keep it true.
 
+## 📊 Progress
+
+<!-- One SVG donut per subject, embedded from <subject>/assets/progress.svg -->
+<!-- ![[Learning/{{subject}}/assets/progress.svg]] -->
+
+```mermaid
+pie showData
+    title Topic completion
+    "Completed" : {{n}}
+    "Remaining" : {{m}}
+```
+
 ## 📚 Active subjects
 
 | Subject | Phase | Progress | Next up | Last activity |

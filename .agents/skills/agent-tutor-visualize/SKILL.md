@@ -57,7 +57,52 @@ Use SVG when Mermaid can't express it: spatial layouts, annotated figures, simpl
 3. Embed with a relative link or wikilink to `Learning/<Subject>/assets/<name>.svg`.
 4. Keep it under ~100 elements. Simple shapes + text beat elaborate art every time.
 
-## 4. Delegating to subagents
+## 4. Dashboard charts
+
+The Dashboard is not a report. Text tables carry the data (links, dates), charts carry the state at a glance. Every chart below is plain text an agent can write — no plugins, no dependencies:
+
+| Chart | Form | Use | Renders in |
+|---|---|---|---|
+| Per-subject progress | **SVG donut** | % of topics complete, phase number | Everywhere (Obsidian, GitHub, browsers) |
+| Topic completion | Mermaid `pie` | done vs remaining, per subject or total | Obsidian, GitHub |
+| Review forecast | Mermaid `xychart-beta` | notes due per day, next 7–14 days | Obsidian 1.5+, GitHub (fallback: table) |
+
+### SVG donut recipe
+
+Deterministic, ~15 elements. One donut per subject, saved to `<subject>/assets/progress.svg`, embedded at the top of the Dashboard:
+
+- Circle `r="45"`, `stroke-width="16"`, `fill="none"`.
+- Track circle: full ring, muted gray (`stroke="#555"`).
+- Progress arc: same radius, accent color, `stroke-dasharray="<dash> <C-dash>"` where `C = 2·π·45 ≈ 282.7` and `dash = C · fraction`. Rotate `-90°` around center so it starts at 12 o'clock.
+- Center text: the percentage (font-size ≥ 28). Label under the donut: `Subject — n/m topics, Phase k`.
+- Obey the SVG rules in section 3 (transparent background, no scripts, light+dark safe colors).
+
+### Mermaid pie
+
+```mermaid
+pie showData
+    title Topic completion — <Subject>
+    "Completed" : <n>
+    "Remaining" : <m>
+```
+
+Keep 2–3 slices. More slices → use a table.
+
+### Review forecast
+
+```mermaid
+xychart-beta
+    title "Reviews due — next 7 days"
+    x-axis ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    y-axis "Notes due" 0 --> 4
+    bar [1, 2, 0, 0, 1, 0, 0]
+```
+
+Scale the y-axis to one above the max bar. If the renderer does not support `xychart-beta`, keep the **Up for review** table as the fallback and omit the chart.
+
+Update the charts whenever the tables change — a dashboard with stale charts is worse than text.
+
+## 5. Delegating to subagents
 
 If the agent supports delegation/subagents (e.g. pi's `subagent` tool with `mermaid-maker` / `svg-maker` agents, or Claude Code subagents), hand off complex or high-effort visuals so the main conversation stays focused:
 
@@ -66,7 +111,7 @@ If the agent supports delegation/subagents (e.g. pi's `subagent` tool with `merm
 
 The diagram and illustration work can run in parallel when a lesson needs both.
 
-## 5. Placement in notes
+## 6. Placement in notes
 
 - Diagram goes right after the concept it explains — never in an "appendix" at the bottom.
 - Give every visual a one-line caption explaining what to notice (`*Figure: notice how X feeds back into Y*`).

@@ -67,6 +67,8 @@ Create `Learning/<Subject>/plan.md` from [templates/plan.md](templates/plan.md).
 - Include measurable **success criteria**: things the user will be able to *do*.
 - Fit the plan to the time budget; state the assumed pace.
 - Update the Dashboard (Active subjects + link to the plan).
+
+The Dashboard carries charts, not only tables: per-subject progress donuts (SVG) and a topic-completion pie. See the `agent-tutor-visualize` skill for the recipes. Update the charts with the tables — never leave a stale chart on the Dashboard.
 - Show the plan to the user and ask for adjustments before teaching.
 
 ## Phase C — The teaching loop (per topic)
