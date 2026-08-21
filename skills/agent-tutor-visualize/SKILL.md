@@ -59,48 +59,60 @@ Use SVG when Mermaid can't express it: spatial layouts, annotated figures, simpl
 
 ## 4. Dashboard charts
 
-The Dashboard is not a report. Text tables carry the data (links, dates), charts carry the state at a glance. Every chart below is plain text an agent can write — no plugins, no dependencies:
+The Dashboard is not a report. Text tables carry the data (links, dates); charts carry the state at a glance. **All dashboard charts are SVG images** — full color control, they render in Obsidian, on GitHub, and in any browser, and the agent writes them with plain file tools. Mermaid stays for lesson diagrams (section 2); the Dashboard grid is SVG only, because Mermaid code blocks cannot sit inside a table cell.
 
-| Chart | Form | Use | Renders in |
-|---|---|---|---|
-| Per-subject progress | **SVG donut** | % of topics complete, phase number | Everywhere (Obsidian, GitHub, browsers) |
-| Topic completion | Mermaid `pie` | done vs remaining, per subject or total | Obsidian, GitHub |
-| Review forecast | Mermaid `xychart-beta` | notes due per day, next 7–14 days | Obsidian 1.5+, GitHub (fallback: table) |
+### Fixed palette — vibrant, no variety
 
-### SVG donut recipe
+| Role | Color |
+|---|---|
+| Accent — progress arcs, pie slices, bars | `#22d3ee` |
+| Accent-deep — big numbers | `#0891b2` |
+| Neutral — tracks, remainder slices, gridlines, zero-stubs | `#3f3f46` |
+| Muted — labels and captions | `#8b8b8b` |
 
-Deterministic, ~15 elements. One donut per subject, saved to `<subject>/assets/progress.svg`, embedded at the top of the Dashboard:
+One cyan hue plus neutrals, chosen to work on light and dark themes. Do not introduce other colors.
+
+### The grid
+
+Embed the charts in a markdown table so they render side by side in Obsidian and on GitHub:
+
+```markdown
+| Progress | Completion | Reviews due |
+|---|---|---|
+| ![](<subject>/assets/progress.svg) | ![](<subject>/assets/completion.svg) | ![](<subject>/assets/forecast.svg) |
+```
+
+- Use standard image syntax with paths **relative to `Learning/Dashboard.md`** — portable everywhere (wikilink embeds do not render on GitHub).
+- Multiple active subjects: one `progress.svg` per subject — donuts first, then `completion.svg` and `forecast.svg`. Start a new row after three cells.
+- Update the charts whenever the tables change — a stale chart is worse than text.
+
+### Donut — `<subject>/assets/progress.svg`
+
+Deterministic, ~15 elements:
 
 - Circle `r="45"`, `stroke-width="16"`, `fill="none"`.
-- Track circle: full ring, muted gray (`stroke="#555"`).
-- Progress arc: same radius, accent color, `stroke-dasharray="<dash> <C-dash>"` where `C = 2·π·45 ≈ 282.7` and `dash = C · fraction`. Rotate `-90°` around center so it starts at 12 o'clock.
-- Center text: the percentage (font-size ≥ 28). Label under the donut: `Subject — n/m topics, Phase k`.
-- Obey the SVG rules in section 3 (transparent background, no scripts, light+dark safe colors).
+- Track circle: full ring, neutral `#3f3f46`.
+- Progress arc: same radius, accent `#22d3ee`, `stroke-dasharray="<dash> 282.7"` where `dash = 282.7 · fraction` (`C = 2·π·45 ≈ 282.7`). Rotate `-90°` around center so it starts at 12 o'clock.
+- Center text: the percentage (font-size ≥ 28, `#0891b2`). Labels under the donut in `#8b8b8b`: subject, n/m topics, phase.
+- Obey the SVG rules in section 3 (transparent background, no scripts, no remote references).
 
-### Mermaid pie
+### Completion pie — `<subject>/assets/completion.svg`
 
-```mermaid
-pie showData
-    title Topic completion — <Subject>
-    "Completed" : <n>
-    "Remaining" : <m>
-```
+Two slices, `viewBox="0 0 200 200"`, center (100,100), radius 80:
 
-Keep 2–3 slices. More slices → use a table.
+- Completed fraction `f = done / total`, angle `a = f · 360°` from 12 o'clock clockwise.
+- Arc end point: `x = 100 + 80·sin(a)`, `y = 100 − 80·cos(a)`.
+- Completed slice (accent): `M 100 100 L 100 20 A 80 80 0 {1 if a > 180° else 0} 1 {x} {y} Z`
+- Remainder (neutral): `M 100 100 L {x} {y} A 80 80 0 {1 if a < 180° else 0} 1 100 20 Z`
+- Center: `done/total` (font-size ≥ 28, `#0891b2`). Caption in `#8b8b8b`.
 
-### Review forecast
+### Review forecast — `<subject>/assets/forecast.svg`
 
-```mermaid
-xychart-beta
-    title "Reviews due — next 7 days"
-    x-axis ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    y-axis "Notes due" 0 --> 4
-    bar [1, 2, 0, 0, 1, 0, 0]
-```
+Bars, one per day for the next 7 days, `viewBox="0 0 340 200"`:
 
-Scale the y-axis to one above the max bar. If the renderer does not support `xychart-beta`, keep the **Up for review** table as the fallback and omit the chart.
-
-Update the charts whenever the tables change — a dashboard with stale charts is worse than text.
+- 7 bars: width 28, spacing 42, baseline `y=150`. Scale: 1 note = 60 px (`height = value · 60`).
+- Value 0 → a 3 px neutral stub at the baseline.
+- Bars accent `#22d3ee`, baseline and stubs `#3f3f46`, day labels (font-size 14) and title `#8b8b8b`.
 
 ## 5. Delegating to subagents
 

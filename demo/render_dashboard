@@ -3,8 +3,8 @@
 # in Obsidian after the session. Pre-rendered with the real example files.
 #
 # The donut matches examples/vault/Learning/Rust/assets/progress.svg
-# (same numbers, same green), the pie and the forecast bars match the
-# example Dashboard.md. Update this file when the example vault changes.
+# and the palette of the visualize skill: accent cyan #22d3ee, neutrals.
+# Update this file when the example vault changes.
 
 B=$'\033[1;36m'
 G=$'\033[1;32m'
@@ -17,15 +17,15 @@ printf '\n%s── Learning Dashboard — as it renders in Obsidian ──%s\n\n
 
 # donut: 7% of 360deg = 25deg arc; chars: 25/360*28 ≈ 2 filled
 printf '   %s████%s%s────────────────────────%s  %s7%% %s Rust — 1/14 topics, Phase 1 of 4\n' \
-  "$G" "$N" "$D" "$N" "$G" "$N"
+  "$B" "$N" "$D" "$N" "$B" "$N"
 
-# completion pie (mermaid `pie`) as a stacked bar
+# completion pie as a stacked bar
 printf '   %s██%s%s██████████████████████%s  %s▂▂▂ Topic completion: 1 done · 13 remaining%s\n' \
-  "$G" "$N" "$D" "$N" "$M" "$N"
+  "$B" "$N" "$D" "$N" "$B" "$N"
 
-# review forecast (mermaid `xychart-beta`) as spark bars
-printf '   %sReviews due — next 7 days%s\n' "$M" "$N"
-printf '     Thu ▁ Fri ▂ Sat · Sun · Mon ▁ Tue · Wed ·   %s1 note due tomorrow (+1d)%s\n' "$D" "$N"
+# review forecast as spark bars
+printf '   %sReviews due — next 7 days%s\n' "$B" "$N"
+printf '     %sThu ▁ Fri ▂ Sat · Sun · Mon ▁ Tue · Wed ·%s   %s1 note due tomorrow (+1d)%s\n' "$B" "$N" "$D" "$N"
 
 printf '\n   %splan.md  notes/01-ownership-model.md  quizzes/  logs/  assets/progress.svg%s\n' "$D" "$N"
 printf '%s   the dashboard updates itself — charts always match the tables.%s\n\n' "$D" "$N"

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" font-family="system-ui, Segoe UI, sans-serif">
+  <path d="M 100 100 L 100 20 A 80 80 0 0 1 134.7 27.9 Z" fill="#22d3ee"/>
+  <path d="M 100 100 L 134.7 27.9 A 80 80 0 1 1 100 20 Z" fill="#3f3f46"/>
+  <text x="100" y="108" text-anchor="middle" font-size="30" font-weight="bold" fill="#0891b2">1/14</text>
+  <text x="100" y="170" text-anchor="middle" font-size="14" fill="#8b8b8b">Topics complete</text>
+  <text x="100" y="188" text-anchor="middle" font-size="14" fill="#8b8b8b">1 done · 13 to go</text>
+</svg>

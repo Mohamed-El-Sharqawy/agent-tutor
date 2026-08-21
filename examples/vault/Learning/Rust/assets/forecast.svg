@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 200" width="340" font-family="system-ui, Segoe UI, sans-serif">
+  <text x="170" y="24" text-anchor="middle" font-size="15" fill="#8b8b8b">Reviews due — next 7 days</text>
+  <line x1="30" y1="150" x2="310" y2="150" stroke="#3f3f46" stroke-width="2"/>
+  <rect x="38" y="90" width="28" height="60" fill="#22d3ee"/>
+  <rect x="80" y="90" width="28" height="60" fill="#22d3ee"/>
+  <rect x="122" y="147" width="28" height="3" fill="#3f3f46"/>
+  <rect x="164" y="147" width="28" height="3" fill="#3f3f46"/>
+  <rect x="206" y="147" width="28" height="3" fill="#3f3f46"/>
+  <rect x="248" y="147" width="28" height="3" fill="#3f3f46"/>
+  <rect x="290" y="147" width="28" height="3" fill="#3f3f46"/>
+  <text x="52" y="172" text-anchor="middle" font-size="14" fill="#8b8b8b">Thu</text>
+  <text x="94" y="172" text-anchor="middle" font-size="14" fill="#8b8b8b">Fri</text>
+  <text x="136" y="172" text-anchor="middle" font-size="14" fill="#8b8b8b">Sat</text>
+  <text x="178" y="172" text-anchor="middle" font-size="14" fill="#8b8b8b">Sun</text>
+  <text x="220" y="172" text-anchor="middle" font-size="14" fill="#8b8b8b">Mon</text>
+  <text x="262" y="172" text-anchor="middle" font-size="14" fill="#8b8b8b">Tue</text>
+  <text x="304" y="172" text-anchor="middle" font-size="14" fill="#8b8b8b">Wed</text>
+</svg>

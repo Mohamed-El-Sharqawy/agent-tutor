@@ -72,6 +72,14 @@ The package has three skills. Install all of them, or select one with `--skill`:
 | `agent-tutor-review` | Standalone spaced-repetition review sessions. |
 | `agent-tutor-visualize` | Diagram rules for lesson notes (Mermaid and SVG). |
 
+### Stay current
+
+At the start of a session, the tutor checks once per day for a newer version of itself (only when a web tool is available). It tells you when an update exists and installs it only with your consent. To update manually, run:
+
+```bash
+npx skills update agent-tutor
+```
+
 ### Clone the repo instead
 
 If you clone this repository, the skills are already in place for your agent. The repo carries `.pi/`, `.agents/skills/`, `.claude/skills/`, and `.windsurf/skills/`. Open the folder in pi, Claude Code, Codex, Cursor, Windsurf, Copilot, Gemini CLI, OpenCode, or one of the other supported agents, and the tutor is ready. No install step.

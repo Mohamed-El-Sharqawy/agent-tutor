@@ -11,15 +11,11 @@ tags: [learning, dashboard]
 
 ## 📊 Progress
 
-<!-- One SVG donut per subject, embedded from <subject>/assets/progress.svg -->
-<!-- ![[Learning/{{subject}}/assets/progress.svg]] -->
+<!-- Grid: donuts per subject, then completion + forecast. Paths relative to Learning/Dashboard.md -->
 
-```mermaid
-pie showData
-    title Topic completion
-    "Completed" : {{n}}
-    "Remaining" : {{m}}
-```
+| Progress | Completion | Reviews due |
+|---|---|---|
+| ![]({{subject}}/assets/progress.svg) | ![]({{subject}}/assets/completion.svg) | ![]({{subject}}/assets/forecast.svg) |
 
 ## 📚 Active subjects
 
