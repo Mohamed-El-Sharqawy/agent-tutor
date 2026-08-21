@@ -5,3 +5,7 @@ Thumbs.db
 .env
 /learning/
 .obsidian/
+
+# local ruleset exports (reference copies of the repo's rulesets)
+/Fork-first.json
+/main — PR + green CI.json
