@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Learning/Rust/notes/01-ownership-model.md",
+                "file": "Learning/Dashboard.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "01-ownership-model"
+              "title": "Dashboard"
             }
           }
         ]
@@ -190,10 +190,10 @@
   },
   "active": "1a28c7c8f93c45a0",
   "lastOpenFiles": [
+    "Learning/Rust/notes/01-ownership-model.md",
     "Learning/Dashboard.md",
     "Learning/Rust/logs/2026-02-19.md",
     "Learning/Rust/quizzes/01-ownership-model-quiz.md",
-    "Learning/Rust/notes/01-ownership-model.md",
     "Learning/Rust/plan.md"
   ]
 }

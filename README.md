@@ -149,7 +149,7 @@ These screenshots show the real notes from the demo vault. The lesson note is th
 
 <table>
 <tr>
-<td width="50%" valign="top"><a href="demo/screenshots/dashboard.png"><img src="demo/screenshots/dashboard.png" alt="The learning dashboard in Obsidian"></a><br><sub><b>Dashboard.</b> Subjects, progress, and the notes that are due for review.</sub></td>
+<td width="50%" valign="top"><a href="demo/screenshots/dashboard-charts.png"><img src="demo/screenshots/dashboard-charts.png" alt="The learning dashboard with charts in Obsidian"></a><br><sub><b>Dashboard.</b> Progress donut, completion pie, review forecast, and the review queue. Obsidian asks once to allow Mermaid diagrams in a new vault.</sub></td>
 <td width="50%" valign="top"><a href="demo/screenshots/plan.png"><img src="demo/screenshots/plan.png" alt="The learning plan in Obsidian"></a><br><sub><b>Plan.</b> Phases, checkboxes, and measurable success criteria.</sub></td>
 </tr>
 <tr>
