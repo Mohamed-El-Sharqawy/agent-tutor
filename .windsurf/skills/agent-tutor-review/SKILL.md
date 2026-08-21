@@ -4,7 +4,7 @@ description: Spaced-repetition review sessions and retention tracking for subjec
 license: MIT
 ---
 
-# Learning Review
+# Agent Tutor — Review
 
 Understanding decays. This skill runs recall-first review sessions and keeps the retention schedule honest.
 

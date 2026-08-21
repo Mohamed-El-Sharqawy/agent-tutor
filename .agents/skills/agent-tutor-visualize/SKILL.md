@@ -4,7 +4,7 @@ description: Build diagrams and visual explanations for learning notes - Mermaid
 license: MIT
 ---
 
-# Learning Visualize
+# Agent Tutor — Visualize
 
 Good visuals are not decoration — they encode structure that text can't. Use this skill whenever a lesson note would benefit from a picture.
 
