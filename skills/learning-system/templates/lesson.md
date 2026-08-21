@@ -45,3 +45,7 @@ tags: [{{subject-tag}}, {{topic-tags}}]
 ## 🔗 Related
 - Previous: [[{{previous-note}}]]
 - Plan: [[plan]]
+
+## 🌐 Sources
+<!-- Only when you verified time-sensitive facts with web search. One bullet per source. -->
+<!-- - [{{Title}}]({{url}}) — accessed {{DATE}} -->

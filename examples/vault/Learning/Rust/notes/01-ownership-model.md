@@ -69,3 +69,6 @@ flowchart LR
 ## 🔗 Related
 - Next: [[02-borrowing]]
 - Plan: [[plan]]
+
+## 🌐 Sources
+- [The Rust Book — ch. 4, Understanding Ownership](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html) — accessed 2026-02-19 (move and drop semantics verified current)
