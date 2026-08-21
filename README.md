@@ -5,6 +5,10 @@
 Your agent writes code all day. Let it teach you something.
 
 [![skills.sh](https://skills.sh/b/Mohamed-El-Sharqawy/agent-tutor)](https://skills.sh/Mohamed-El-Sharqawy/agent-tutor)
+[![License: MIT](https://img.shields.io/github/license/Mohamed-El-Sharqawy/agent-tutor)](LICENSE)
+[![skills sync + smoke test](https://github.com/Mohamed-El-Sharqawy/agent-tutor/actions/workflows/skills-sync.yml/badge.svg)](https://github.com/Mohamed-El-Sharqawy/agent-tutor/actions/workflows/skills-sync.yml)
+[![demo gif build](https://github.com/Mohamed-El-Sharqawy/agent-tutor/actions/workflows/demo-gif.yml/badge.svg)](https://github.com/Mohamed-El-Sharqawy/agent-tutor/actions/workflows/demo-gif.yml)
+[![GitHub stars](https://img.shields.io/github/stars/Mohamed-El-Sharqawy/agent-tutor)](https://github.com/Mohamed-El-Sharqawy/agent-tutor/stargazers)
 
 agent-tutor works with Claude Code, Codex, Cursor, Windsurf, OpenCode, Antigravity, pi, and more than 70 other agents. The agent interviews you about your goal. Then it writes a learning plan, teaches you topic by topic, and writes every lesson as a complete markdown note in a folder that you own. It quizzes you after each lesson, gives honest feedback, and schedules spaced-repetition reviews.
 
