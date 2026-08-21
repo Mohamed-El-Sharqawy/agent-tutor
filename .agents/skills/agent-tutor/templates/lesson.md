@@ -9,6 +9,8 @@ review: [+1d, +3d, +7d]
 tags: [{{subject-tag}}, {{topic-tags}}]
 ---
 
+<!-- Before drafting: apply the teaching contract in [[learner-profile]] — analogy domains, density, layout, jargon pacing, tone. Delete this comment. -->
+
 > [!abstract] In 3 sentences
 > {{The absolute essence of this topic.}}
 

@@ -1,7 +1,7 @@
 {
   "name": "agent-tutor",
   "version": "0.1.0",
-  "description": "Turn any coding agent into a structured personal tutor: phased learning plans, lesson notes in a markdown vault, quizzes with honest feedback, and spaced-repetition reviews.",
+  "description": "The agent-agnostic AI tutor skill that writes into your Obsidian vault: profiles how you learn, builds phased plans, teaches from your own material, quizzes with honest feedback, and schedules spaced-repetition reviews.",
   "keywords": [
     "pi-package",
     "agent-skills",
