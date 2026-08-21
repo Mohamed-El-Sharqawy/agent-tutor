@@ -19,6 +19,11 @@ jobs:
       contents: write # drift auto-fix commits to PR branches
     steps:
       - uses: actions/checkout@v4
+        with:
+          # PR events: check out the PR's own branch. The default is a detached
+          # merge commit — git push from it fails. Push events: empty → default ref.
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - uses: actions/setup-node@v4
         with:
@@ -41,7 +46,11 @@ jobs:
             exit 0
           fi
           git commit -m "chore: sync generated skill copies (bot)"
-          git push
+          if ! git push; then
+            echo "::error::Drift detected, and the bot could not push the fix (branch updates may be restricted)."
+            echo "::error::Run locally: node scripts/sync-skills.mjs — commit and push again."
+            exit 1
+          fi
           echo "::notice::Generated copies were out of sync — the bot committed the fix to this PR branch."
 
       # Main pushes and fork PRs: no write access — fail with the fix command.
