@@ -1,0 +1,9 @@
+{
+  "skills": ["../skills"],
+  "extensions": [
+    "../extensions/md-log.ts",
+    "../extensions/quiz.ts",
+    "../extensions/visual-tools",
+    "../extensions/subagent.ts"
+  ]
+}
