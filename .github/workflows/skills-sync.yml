@@ -8,8 +8,12 @@ on:
   push:
     branches: [main]
     paths: ["skills/**", "scripts/sync-skills.mjs", ".github/workflows/skills-sync.yml"]
+  # No paths filter here on purpose: `check` is a required status check, and a
+  # path-filtered workflow never reports that context on PRs outside its paths
+  # — their merge box hangs on "Expected — Waiting for status to be reported"
+  # forever. On PRs that touch none of those paths this job still runs; it just
+  # passes quickly (nothing to sync) and reports the required context.
   pull_request:
-    paths: ["skills/**", "scripts/sync-skills.mjs", ".github/workflows/skills-sync.yml"]
   workflow_dispatch:
 
 jobs:
