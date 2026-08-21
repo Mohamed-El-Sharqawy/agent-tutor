@@ -22,7 +22,7 @@ Every artifact is a plain markdown file on your disk. You do not need an account
 
 ```mermaid
 flowchart LR
-    A["1. Interview<br/>the user"] --> B["2. Write<br/>the plan"]
+    A["1. Interview the user<br/>(profile + goal)"] --> B["2. Write<br/>the plan"]
     B --> C["3. Write<br/>the lesson"]
     C --> D["4. Quiz<br/>the user"]
     D --> E{"Score:<br/>70% or more?"}
@@ -39,6 +39,7 @@ flowchart LR
 
 | | |
 |---|---|
+| 🧠 **Learner profile** | Before anything else, the agent interviews you: how you think, which explanations make things click, the tone and pace you like. The profile shapes the plan and the writing style of every lesson. |
 | 🎯 **Goal intake** | The agent asks for your goal, your level, and your time budget before the first lesson. |
 | 🗺️ **Phased plans** | 3–6 phases. Each topic fits into one session of 60 minutes or less. |
 | 📖 **Lesson notes** | Complete lessons with diagrams, worked examples, common pitfalls, and self-check questions. You answer the questions in the note. |
