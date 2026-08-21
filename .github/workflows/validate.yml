@@ -1,0 +1,24 @@
+name: validate
+
+# The single source of truth for "is this PR OK": runs scripts/validate.mjs
+# on every PR and push to main — skill spec, template links, self-containment,
+# sync drift, Mermaid diagrams, example-vault wikilinks, issue templates.
+# No network, no dependencies, ~15s. Contributors never need to test locally.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate repo (spec, links, diagrams, vault, sync)
+        run: node scripts/validate.mjs

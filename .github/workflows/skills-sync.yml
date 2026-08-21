@@ -15,6 +15,8 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # drift auto-fix commits to PR branches
     steps:
       - uses: actions/checkout@v4
 
@@ -25,7 +27,26 @@ jobs:
       - name: Re-sync harness skill directories
         run: node scripts/sync-skills.mjs
 
-      - name: Fail on drift (commit the synced copies)
+      # PRs from this repo: the bot commits the synced copies to the PR
+      # branch so nobody ever has to run the sync locally. The push
+      # re-triggers the checks on the fixed commit.
+      - name: Auto-fix drift (PRs from this repo)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "in sync — nothing to fix"
+            exit 0
+          fi
+          git commit -m "chore: sync generated skill copies (bot)"
+          git push
+          echo "::notice::Generated copies were out of sync — the bot committed the fix to this PR branch."
+
+      # Main pushes and fork PRs: no write access — fail with the fix command.
+      - name: Fail on drift (main pushes and forks)
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
         run: |
           git config user.name "drift-check"
           git add -A
@@ -35,5 +56,11 @@ jobs:
             exit 1
           }
 
-      - name: Smoke test — skills CLI discovers the skills
-        run: npx -y skills@latest add . --list --yes | grep -c "agent-tutor"
+      - name: Smoke test — the skills CLI discovers all three skills
+        run: |
+          OUT=$(npx -y skills@latest add . --list --yes)
+          echo "$OUT"
+          for s in agent-tutor agent-tutor-review agent-tutor-visualize; do
+            echo "$OUT" | grep -q "$s" || { echo "::error::$s not discovered by the skills CLI"; exit 1; }
+          done
+          echo "all 3 skills discovered"
