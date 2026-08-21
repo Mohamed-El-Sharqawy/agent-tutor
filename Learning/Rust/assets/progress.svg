@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" font-family="system-ui, Segoe UI, sans-serif">
-  <g transform="rotate(-90 100 100)">
-    <circle cx="100" cy="100" r="45" fill="none" stroke="#555" stroke-width="16"/>
-    <circle cx="100" cy="100" r="45" fill="none" stroke="#7cc26a" stroke-width="16" stroke-dasharray="20.2 262.5" stroke-linecap="butt"/>
-  </g>
-  <text x="100" y="108" text-anchor="middle" font-size="30" font-weight="bold" fill="#7cc26a">7%</text>
-  <text x="100" y="170" text-anchor="middle" font-size="14" fill="#888">Rust — 1/14 topics</text>
-  <text x="100" y="188" text-anchor="middle" font-size="14" fill="#888">Phase 1 of 4</text>
-</svg>
