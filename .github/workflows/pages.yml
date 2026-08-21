@@ -4,6 +4,8 @@ name: pages
 # The example vault is Obsidian markdown: wikilinks and embeds are
 # converted to relative links with a small python step, then rendered
 # with the official Pages Jekyll builder. Static, read-only, no backend.
+# (This comment line re-triggers CI: the required `check` context only
+# started reporting after the skills-sync trigger fix landed on main.)
 
 on:
   push:
