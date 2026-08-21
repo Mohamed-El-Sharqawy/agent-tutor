@@ -49,12 +49,23 @@ const show = (p) => relative(root, p).replaceAll("\\", "/");
 // --- 1–3. skills: spec, self-containment, template links ------------------
 
 function parseFrontmatter(text) {
-  const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
+  const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text.replace(/^\uFEFF/, ""));
   if (!m) return null;
   const fm = {};
   for (const line of m[1].split(/\r?\n/)) {
     const kv = /^([A-Za-z_][\w-]*):\s*(.*)$/.exec(line);
     if (kv) fm[kv[1]] = kv[2].trim();
+  }
+  return fm;
+}
+
+/** GitHub issue forms are whole-file YAML (no closing ---): scan top-level keys. */
+function parseIssueForm(text) {
+  const fm = {};
+  for (const line of text.replace(/^\uFEFF/, "").split(/\r?\n/)) {
+    const kv = /^([A-Za-z_][\w-]*):\s*(.*)$/.exec(line);
+    if (kv) fm[kv[1]] = kv[2].trim();
+    if (Object.keys(fm).length >= 3 && kv === null && line.startsWith(" ")) break; // entered body
   }
   return fm;
 }
@@ -223,20 +234,21 @@ note(`vault: ${linkCount} wikilinks resolved`);
 
 const issueDir = join(root, ".github", "ISSUE_TEMPLATE");
 for (const file of mdFiles(issueDir)) {
-  const fm = parseFrontmatter(readFileSync(file, "utf8"));
+  const fm = parseIssueForm(readFileSync(file, "utf8"));
   if (!fm || !fm.name)
-    fail("issue-templates", show(file), "Missing frontmatter with name:.");
+    fail("issue-templates", show(file), "Missing top-level name: key.", "Issue forms need a name: line.");
   else if (!fm.labels)
-    fail("issue-templates", show(file), "No labels: in frontmatter.");
+    fail("issue-templates", show(file), "No labels: in the template.", "Add labels: [...], e.g. good first issue feeders.");
 }
 
 // --- report -------------------------------------------------------------------
 
 for (const n of notes) console.log(`  · ${n}`);
 if (failures.length) {
-  console.error(`\n✖ ${failures.length} failure(s):\n`);
+  console.log(`\n✖ ${failures.length} failure(s):\n`); // stdout: keeps Actions log ordering stable
   for (const f of failures)
-    console.error(`  [${f.check}] ${f.file}\n      ${f.message}${f.fix ? `\n      fix: ${f.fix}` : ""}\n`);
-  process.exit(1);
+    console.log(`  [${f.check}] ${f.file}\n      ${f.message}${f.fix ? `\n      fix: ${f.fix}` : ""}\n`);
+  process.exitCode = 1;
+} else {
+  console.log("\n✔ validate: all checks passed");
 }
-console.log("\n✔ validate: all checks passed");
