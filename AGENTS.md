@@ -1,20 +1,22 @@
 # Learning System
 
-This workspace is the source repo for **learning-system** — agent-agnostic tutoring skills plus optional pi extensions. It is also a live learning workspace: the owner runs learning sessions here.
+This workspace is the source repo for **agent-tutor** — agent-agnostic tutoring skills plus optional pi extensions. It is also a live learning workspace: the owner runs learning sessions here.
 
 ## Layout
 
 | Location | What it does |
 |---|---|
-| `skills/learning-system` | Umbrella skill: intake → plan → lessons → quizzes → logs (works on any agent) |
-| `skills/learning-review` | Standalone spaced-repetition review skill |
-| `skills/learning-visualize` | Diagram selection + Mermaid/SVG standards |
+| `skills/agent-tutor` | Umbrella skill: intake → plan → lessons → quizzes → logs (works on any agent) |
+| `skills/agent-tutor-review` | Standalone spaced-repetition review skill |
+| `skills/agent-tutor-visualize` | Diagram selection + Mermaid/SVG standards |
 | `extensions/md-log.ts` | pi `learning_log` tool: styled log entries in the vault |
 | `extensions/quiz.ts` | pi `quiz` tool: interactive multiple-choice quizzes |
 | `extensions/visual-tools/` | pi `mermaid_lint`, `svg_check`, `svg_save` tools |
 | `extensions/subagent.ts` | pi `subagent` tool: delegates to agents in `agents/*.md` |
 | `agents/mermaid-maker.md`, `agents/svg-maker.md` | Diagram/illustration subagents |
 | `examples/vault/` | Sample filled-in vault for the README |
+| `.pi/settings.json` | Loads the skills and extensions in pi (points at `skills/`, no copy) |
+| `.agents/skills/`, `.claude/skills/`, `.windsurf/skills/` | **Generated** copies of `skills/` so the repo works out of the box in other agents. Run `node scripts/sync-skills.mjs` after changing `skills/`. CI fails on drift. Do not edit these directly. |
 
 ## Vault location
 
@@ -28,9 +30,9 @@ Never hardcode absolute vault paths in skills, extensions, or templates.
 ## Session routine (when using this as a learning workspace)
 
 1. Read `Learning/Dashboard.md` in the vault to see active subjects, the review queue, and recent activity.
-2. New subject → the `learning-system` skill drives it.
-3. Diagram work → `learning-visualize`; delegate complex visuals to the subagents.
-4. Revisit / practice → `learning-review`.
+2. New subject → the `agent-tutor` skill drives it.
+3. Diagram work → `agent-tutor-visualize`; delegate complex visuals to the subagents.
+4. Revisit / practice → `agent-tutor-review`.
 5. End every session with a log entry (`learning_log` tool or the fallback format in the skill).
 
 ## Ground rules

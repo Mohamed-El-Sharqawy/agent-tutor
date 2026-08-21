@@ -1,5 +1,5 @@
 ---
-name: learning-visualize
+name: agent-tutor-visualize
 description: Build diagrams and visual explanations for learning notes - Mermaid diagram selection and syntax rules plus SVG illustration guidelines for lesson notes in a markdown vault. Use when a concept needs a picture such as flows, hierarchies, timelines, comparisons, or spatial layouts, and when creating or embedding diagrams in lesson notes.
 license: MIT
 ---

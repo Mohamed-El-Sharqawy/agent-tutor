@@ -1,5 +1,5 @@
 {
-  "name": "learning-system",
+  "name": "agent-tutor",
   "version": "0.1.0",
   "description": "Turn any coding agent into a structured personal tutor: phased learning plans, lesson notes in a markdown vault, quizzes with honest feedback, and spaced-repetition reviews.",
   "keywords": [
@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mohamed-El-Sharqawy/learning-system.git"
+    "url": "git+https://github.com/Mohamed-El-Sharqawy/agent-tutor.git"
   },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",

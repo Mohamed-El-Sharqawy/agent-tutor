@@ -1,5 +1,5 @@
 ---
-name: learning-system
+name: agent-tutor
 description: Turn any coding agent into a structured personal tutor with a markdown knowledge vault. Runs goal intake, builds a phased learning plan, writes complete lesson notes (with diagrams and self-check questions), quizzes with honest non-inflated feedback, schedules spaced-repetition reviews, and tracks progress on a dashboard. Use when the user wants to learn a new subject in depth, continue a learning plan, be tutored or quizzed, or seriously study any topic.
 license: MIT
 ---
@@ -73,7 +73,7 @@ Create `Learning/<Subject>/plan.md` from [templates/plan.md](templates/plan.md).
 
 1. **Write the lesson note first — the note is the artifact.** Build `notes/NN-topic.md` from [templates/lesson.md](templates/lesson.md) with the complete lesson content up front. The user reads lessons in their editor/vault, not in the chat terminal.
 2. **Chat carries orientation and feedback, not content.** Self-check questions live *inside* the note: end every lesson with question callouts containing a **Your answer:** slot. The user answers in the note, then says "check my answers" — read the note, grade honestly (annotate corrections/scores in the note), keep the chat summary to a few lines. Never dump full lesson text into chat.
-3. **Add visuals** where they genuinely help (diagram selection rules below; full guide in the `learning-visualize` skill if installed).
+3. **Add visuals** where they genuinely help (diagram selection rules below; full guide in the `agent-tutor-visualize` skill if installed).
 4. **Quiz** the user — 5–8 questions mixing recall, application, and transfer. Never reveal answers before the quiz runs.
 5. **Honest feedback** (rules below). Write the report to `quizzes/NN-topic-quiz.md` from [templates/quiz-report.md](templates/quiz-report.md).
 6. **Log & advance**: append a log entry, tick the topic checkbox in `plan.md`, tell the user what's next. If score < 70%, re-teach the weak spots and re-quiz before moving on.
@@ -171,14 +171,14 @@ Every lesson note carries a `review:` field in its frontmatter. Standard ladder:
 +1d → +3d → +7d → +14d → +30d → +90d (then considered durable)
 ```
 
-Advance on solid recall; drop back one interval on a failed review; re-teach and reset to +1d if the topic is gone. Review sessions are **recall-first** (user explains from memory before seeing the note) and **interleaved** (mix phases/subjects). If the `learning-review` skill is installed, load it for the full protocol; the above is a sufficient fallback.
+Advance on solid recall; drop back one interval on a failed review; re-teach and reset to +1d if the topic is gone. Review sessions are **recall-first** (user explains from memory before seeing the note) and **interleaved** (mix phases/subjects). If the `agent-tutor-review` skill is installed, load it for the full protocol; the above is a sufficient fallback.
 
 ## Visuals — quick rules
 
 - Right after the concept it explains, with a one-line caption. Never in an "appendix".
 - **Mermaid** for flows/timelines/hierarchies; keep < 15 nodes, short labels, quote special characters.
 - **SVG** only when Mermaid can't express it (spatial layouts, annotated figures). Requirements: `xmlns` + `viewBox`, font-size ≥ 14, transparent background, works on light and dark themes, no scripts or remote references. Save to `assets/`, embed via relative link or wikilink.
-- If validators exist (`mermaid_lint`, `svg_check`/`svg_save`), use them before embedding. If the `learning-visualize` skill is installed, follow its full rules.
+- If validators exist (`mermaid_lint`, `svg_check`/`svg_save`), use them before embedding. If the `agent-tutor-visualize` skill is installed, follow its full rules.
 - A crisp table often beats a mediocre diagram. Don't force visuals.
 
 ## Style guide for lesson notes

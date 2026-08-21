@@ -1,6 +1,6 @@
 ---
-name: learning-review
-description: Spaced-repetition review sessions and retention tracking for subjects learned with the learning-system tutor. Recall-first practice over lesson notes, interval scheduling (+1d to +90d), honest retention verdicts, and a mixed mini-quiz per session. Use when the user wants to revise or practice old topics, check what they remember, or when the dashboard shows notes up for review.
+name: agent-tutor-review
+description: Spaced-repetition review sessions and retention tracking for subjects learned with the agent-tutor skill. Recall-first practice over lesson notes, interval scheduling (+1d to +90d), honest retention verdicts, and a mixed mini-quiz per session. Use when the user wants to revise or practice old topics, check what they remember, or when the dashboard shows notes up for review.
 license: MIT
 ---
 

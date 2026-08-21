@@ -1,0 +1,39 @@
+name: skills-sync
+
+# The harness skill directories (.agents/.claude/.windsurf) are generated
+# from skills/ by scripts/sync-skills.mjs. Fail if someone edits skills/
+# without re-syncing, or edits a generated copy directly.
+
+on:
+  push:
+    branches: [main]
+    paths: ["skills/**", "scripts/sync-skills.mjs", ".github/workflows/skills-sync.yml"]
+  pull_request:
+    paths: ["skills/**", "scripts/sync-skills.mjs", ".github/workflows/skills-sync.yml"]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Re-sync harness skill directories
+        run: node scripts/sync-skills.mjs
+
+      - name: Fail on drift (commit the synced copies)
+        run: |
+          git config user.name "drift-check"
+          git add -A
+          git diff --cached --exit-code || {
+            echo "::error::skills/ and the harness copies are out of sync."
+            echo "::error::Run: node scripts/sync-skills.mjs — then commit."
+            exit 1
+          }
+
+      - name: Smoke test — skills CLI discovers the skills
+        run: npx -y skills@latest add . --list --yes | grep -c "agent-tutor"

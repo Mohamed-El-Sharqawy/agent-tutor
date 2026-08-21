@@ -1,0 +1,32 @@
+name: demo-gif
+
+# Re-render demo/demo.gif whenever the tape or script changes.
+# Runs vhs in its official container image — no local deps.
+
+on:
+  push:
+    branches: [main]
+    paths: ["demo/demo.tape", "demo/tutor.sh", ".github/workflows/demo-gif.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render demo.gif with vhs
+        run: |
+          docker run --rm -v "$PWD:/vhs" ghcr.io/charmbracelet/vhs demo/demo.tape
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add demo/demo.gif
+          git diff --cached --quiet && echo "no change" && exit 0
+          git commit -m "chore: re-render demo/demo.gif"
+          git push
