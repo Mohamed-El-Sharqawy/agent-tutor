@@ -27,5 +27,9 @@
   "pi": {
     "extensions": ["./extensions"],
     "skills": ["./skills"]
+  },
+  "scripts": {
+    "sync": "node scripts/sync-skills.mjs",
+    "check": "node scripts/validate.mjs"
   }
 }
