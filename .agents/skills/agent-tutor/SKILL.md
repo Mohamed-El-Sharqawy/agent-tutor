@@ -1,6 +1,6 @@
 ---
 name: agent-tutor
-version: 4
+version: 5
 description: Turn any coding agent into a structured personal tutor with a markdown knowledge vault. Interviews the learner to build a personal learning profile (how they think, which explanations they receive best, tone and pace preferences), builds a phased plan shaped by that profile, writes complete lesson notes in the learner's own style (with diagrams and self-check questions), quizzes with honest non-inflated feedback, schedules spaced-repetition reviews, and tracks progress on a dashboard. Use when the user wants to learn a new subject in depth, continue a learning plan, be tutored or quizzed, or seriously study any topic.
 license: MIT
 ---
@@ -228,13 +228,28 @@ Keep the Dashboard's recent-activity line in sync.
 
 ## Reviews (spaced repetition)
 
-Every lesson note carries a `review:` field in its frontmatter. Standard ladder:
+Every lesson note carries a `review:` block in its frontmatter with the note's memory state:
 
-```
-+1d → +3d → +7d → +14d → +30d → +90d (then considered durable)
+```yaml
+review:
+  interval: 6      # current interval in days
+  ease: 2.5        # multiplier applied on a solid recall
+  due: 2026-08-28  # next review date
 ```
 
-Advance on solid recall; drop back one interval on a failed review; re-teach and reset to +1d if the topic is gone. Review sessions are **recall-first** (user explains from memory before seeing the note) and **interleaved** (mix phases/subjects). If the `agent-tutor-review` skill is installed, load it for the full protocol; the above is a sufficient fallback.
+Scheduling is **FSRS-inspired and adaptive** — intervals grow multiplicatively and are tuned per note by the learner's verdicts:
+
+| Verdict | Effect |
+|---|---|
+| **Solid** | `interval = round(interval × ease)`, then `ease = min(ease + 0.05, max_ease)` |
+| **Shaky but recoverable** | `interval = round(interval × 1.2)`, `ease = max(ease − 0.2, min_ease)` |
+| **Gone** | re-teach, reset `interval` to the initial interval, `ease = max(ease − 0.5, min_ease)`, flag for re-study |
+
+Defaults: initial interval `+1d`, ease `2.5`, `min_ease` 1.3, `max_ease` 3.5, **no maximum interval** — notes keep growing past 90 days as long as recall stays solid. The learner can override any of these with an optional `review_policy:` block in their learner profile.
+
+Legacy notes whose `review:` field is still a ladder list (`[+1d, +3d, +7d]`) keep working: take the last entry as the current interval with default ease, and migrate them to the block format at the next review.
+
+Review sessions are **recall-first** (user explains from memory before seeing the note) and **interleaved** (mix phases/subjects). If the `agent-tutor-review` skill is installed, load it for the full protocol; the above is a sufficient fallback.
 
 ## Visuals — quick rules
 

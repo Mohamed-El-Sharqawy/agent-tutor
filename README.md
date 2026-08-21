@@ -49,7 +49,7 @@ flowchart LR
 | 📖 **Lesson notes** | Complete lessons with diagrams, worked examples, common pitfalls, and self-check questions. You answer the questions in the note. |
 | ❓ **Real quizzes** | 5–8 questions per topic. The pass mark is 70%. Each answer gets an explanation. |
 | 🧂 **Honest feedback** | The tutor does not please you. It names the exact misconception behind each wrong answer. |
-| 🔁 **Spaced repetition** | A review ladder from +1d to +90d. Reviews start with recall, not with re-reading. |
+| 🔁 **Spaced repetition** | FSRS-inspired scheduling that adapts to your recall — no fixed ceiling. Reviews start with recall, not with re-reading. |
 | 🌐 **Current facts** | The tutor verifies versions and time-sensitive facts with web search. It cites the source and the access date in the note. |
 | 📊 **Dashboard** | One file lists your subjects, your progress, and the notes that are due for review. |
 
@@ -63,7 +63,7 @@ Other tutor skills exist — most are good. The honest differences:
 | Learning lives in | **your Obsidian vault** | app DB / its folders | `~/.learn/` | project tutorials dir |
 | Learner profile | ✅ interview + teaching contract | reads annotations | ✅ diagnostic | ➖ |
 | Learn from your material | URL · PDF · folder · repo | ✅ | PDF · URL · code | your codebase |
-| Spaced repetition | +1d → +90d ladder | ➖ | ✅ FSRS | ➖ |
+| Spaced repetition | ✅ adaptive (FSRS-inspired, uncapped) | ➖ | ✅ FSRS | ➖ |
 | Honest-feedback contract | ✅ | ➖ | ✅ | ➖ |
 | Extra runtime | none | optional web app (Python + Node) | none | none |
 

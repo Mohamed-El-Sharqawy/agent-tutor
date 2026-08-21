@@ -53,6 +53,21 @@ tags: [learning, profile]
 > 4. {{e.g. "Notes stay compact — depth goes into worked examples, not prose."}}
 > 5. {{e.g. "Feedback is blunt and short. No cheerleading."}}
 
+## 🔁 Review policy (optional)
+
+<!-- Delete this section to accept the FSRS-style defaults: initial interval 1d, ease 2.5, min_ease 1.3, max_ease 3.5, no maximum interval, ±5% fuzz. -->
+
+```yaml
+review_policy:
+  scheduler: fsrs-inspired
+  initial_interval: 1   # days after first learning / after a lapse
+  ease: 2.5             # interval multiplier on a solid recall
+  min_ease: 1.3
+  max_ease: 3.5
+  max_interval: null    # null = unbounded; set a number of days to cap growth
+  fuzz: true            # ±5% jitter on computed due dates
+```
+
 ## 🔍 Observed evidence
 
 <!-- Micro-diagnostic notes and behavior observed during lessons — what worked, what caused friction. -->

@@ -1,7 +1,7 @@
 ---
 name: agent-tutor-review
-version: 1
-description: Spaced-repetition review sessions and retention tracking for subjects learned with the agent-tutor skill. Recall-first practice over lesson notes, interval scheduling (+1d to +90d), honest retention verdicts, and a mixed mini-quiz per session. Use when the user wants to revise or practice old topics, check what they remember, or when the dashboard shows notes up for review.
+version: 2
+description: Spaced-repetition review sessions and retention tracking for subjects learned with the agent-tutor skill. Recall-first practice over lesson notes, adaptive FSRS-style interval scheduling (uncapped by default), honest retention verdicts, and a mixed mini-quiz per session. Use when the user wants to revise or practice old topics, check what they remember, or when the dashboard shows notes up for review.
 license: MIT
 ---
 
@@ -13,22 +13,46 @@ Understanding decays. This skill runs recall-first review sessions and keeps the
 
 ## The schedule
 
-Every lesson note carries a `review:` field in its frontmatter with upcoming intervals. Standard ladder:
+Every lesson note carries a `review:` block in its frontmatter with the note's memory state:
 
-```
-+1d → +3d → +7d → +14d → +30d → +90d (then considered durable)
+```yaml
+review:
+  interval: 6      # current interval in days
+  ease: 2.5        # multiplier applied on a solid recall
+  due: 2026-08-28  # next review date
 ```
 
-After a successful review, advance to the next interval. After a failed review, drop back one interval and flag the note for re-study.
+Scheduling is **FSRS-inspired and adaptive** — no fixed ladder and no ceiling. After each review, compute the next state:
+
+| Verdict | Interval | Ease |
+|---|---|---|
+| **Solid** | `round(interval × ease)` | `+0.05`, up to `max_ease` |
+| **Shaky but recoverable** | `round(interval × 1.2)` | `−0.2`, down to `min_ease` |
+| **Gone** | reset to the initial interval | `−0.5`, down to `min_ease`; flag for re-study |
+
+Defaults — overridable per learner with an optional `review_policy:` block in the learner profile:
+
+```yaml
+review_policy:
+  scheduler: fsrs-inspired
+  initial_interval: 1   # days after first learning / after a lapse
+  ease: 2.5             # starting multiplier
+  min_ease: 1.3
+  max_ease: 3.5
+  max_interval: null    # null = unbounded; set e.g. 365 to cap growth
+  fuzz: true            # ±5% jitter on computed due dates so notes don't pile up on one day
+```
+
+Notes are never "done": a long interval just means the topic comes up rarely. Legacy notes whose `review:` field is a plain list (`[+1d, +3d, +7d]`) still work — take the last entry as the current interval with default ease, and migrate them to the block format at this review.
 
 ## Running a review session
 
 1. Read `Learning/Dashboard.md` → **Up for review** section (notes whose next review date has passed). If the dashboard looks stale, scan `Learning/<Subject>/notes/*/` frontmatter directly.
 2. **Recall first, always.** For each note: ask the user to explain the topic from memory *before* showing anything. ("Explain closures to me as if I'd never heard of them.")
-3. Judge the recall against the note's key takeaways, then:
-   - **Solid** → advance the interval.
-   - **Shaky but recoverable** → show the key takeaways, have them re-explain, advance only if the second attempt is clean.
-   - **Gone** → mark for re-study: re-open the lesson, re-teach the gaps, reset the interval to `+1d`.
+3. Judge the recall against the note's key takeaways, then apply the schedule table:
+   - **Solid** → apply the solid row.
+   - **Shaky but recoverable** → show the key takeaways, have them re-explain; apply the shaky row only if the second attempt is clean, otherwise treat as gone.
+   - **Gone** → mark for re-study: re-open the lesson, re-teach the gaps, apply the gone row (reset to the initial interval).
 4. **Interleave**: mix topics from different phases/subjects in one session — interleaving is the point, don't review one phase in isolation.
 5. End with a **mixed mini-quiz** (5–8 questions spanning everything reviewed today).
    - If an interactive quiz tool is available (e.g. pi's `quiz`), use it.

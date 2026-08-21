@@ -12,7 +12,6 @@ Most of this repo is instructions, templates, and documentation. A subject pack,
 | 🌍 **Translations** | A README translation (Arabic and Chinese are the priorities). Copy `README.md` → `README.<lang>.md` and translate. | `translation` |
 | 🎨 **Diagram recipes** | New Mermaid/SVG recipes for `agent-tutor-visualize` (timelines, hierarchies, comparison layouts). | `good first issue` |
 | 🧩 **Templates** | Improve `templates/*.md` (lesson, plan, quiz report, learner profile, sources). | `good first issue` |
-| 🔁 **Review scheduling** | The review ladder is fixed (+1d→+90d). SM-2/FSRS-style adaptive intervals are a wanted, well-scoped change. | `enhancement` |
 | 🛠 **Extensions** | The pi extensions in `extensions/` are TypeScript with peer dependencies only. | `enhancement` |
 | 🐛 **Bug reports** | Always welcome. Include your agent name, the skill version from the SKILL.md frontmatter, and what the tutor did vs. what you expected. | `bug` |
 
