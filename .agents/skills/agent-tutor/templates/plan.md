@@ -20,7 +20,14 @@ tags: [learning, plan]
 | Current level | {{beginner / some exposure / refreshing}} |
 | Time budget | {{e.g. 45 min/day, 5 days/week}} |
 | Deadline | {{date or "open-ended"}} |
-| Preferences | {{visual / example-first / theory-first / dislikes}} |
+| Profile | how you learn best — see [[learner-profile]] |
+
+## 🧭 Tailored to you
+> [!info] How this plan follows your [[learner-profile]]
+> - **Structure:** {{e.g. top-down → orientation phase first; bottom-up → foundations first}}
+> - **Topic size:** {{sized to ~X-min sittings from the profile/time budget}}
+> - **Examples from:** {{analogy domains the profile names}}
+> - **Pace & challenge:** {{steady ladder / stretch challenges}}
 
 ## 🗺️ Phases
 

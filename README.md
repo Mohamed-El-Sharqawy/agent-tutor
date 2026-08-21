@@ -1,8 +1,12 @@
 # agent-tutor
 
-**Turn any coding agent into a structured personal tutor.**
+**The agent-agnostic AI tutor skill that writes into *your* Obsidian vault.**
 
-Your agent writes code all day. Let it teach you something.
+Your coding agent profiles how you learn, builds a phased plan, teaches topic by topic — from your own material if you have it — quizzes you with honest feedback, and schedules spaced-repetition reviews. Every lesson lands as a complete markdown note in a vault **you own**: no web app, no backend, no account, no lock-in.
+
+```bash
+npx skills add Mohamed-El-Sharqawy/agent-tutor
+```
 
 [![skills.sh](https://skills.sh/b/Mohamed-El-Sharqawy/agent-tutor)](https://skills.sh/Mohamed-El-Sharqawy/agent-tutor)
 [![License: MIT](https://img.shields.io/github/license/Mohamed-El-Sharqawy/agent-tutor)](LICENSE)
@@ -10,9 +14,7 @@ Your agent writes code all day. Let it teach you something.
 [![demo gif build](https://github.com/Mohamed-El-Sharqawy/agent-tutor/actions/workflows/demo-gif.yml/badge.svg)](https://github.com/Mohamed-El-Sharqawy/agent-tutor/actions/workflows/demo-gif.yml)
 [![GitHub stars](https://img.shields.io/github/stars/Mohamed-El-Sharqawy/agent-tutor)](https://github.com/Mohamed-El-Sharqawy/agent-tutor/stargazers)
 
-agent-tutor works with Claude Code, Codex, Cursor, Windsurf, OpenCode, Antigravity, pi, and more than 70 other agents. The agent interviews you about your goal. Then it writes a learning plan, teaches you topic by topic, and writes every lesson as a complete markdown note in a folder that you own. It quizzes you after each lesson, gives honest feedback, and schedules spaced-repetition reviews.
-
-Every artifact is a plain markdown file on your disk. You do not need an account, and the notes work offline. The notes use Obsidian conventions (wikilinks, callouts), but they read well in any editor.
+Works with Claude Code, Codex, Cursor, Windsurf, OpenCode, Antigravity, pi, and more than 70 other agents — the skills are plain markdown that follows the [Agent Skills](https://agentskills.io) standard. The notes use Obsidian conventions (wikilinks, callouts), but they read well in any editor, and they work offline.
 
 ![A full tutor session in the terminal](demo/demo.gif)
 
@@ -22,7 +24,7 @@ Every artifact is a plain markdown file on your disk. You do not need an account
 
 ```mermaid
 flowchart LR
-    A["1. Interview<br/>the user"] --> B["2. Write<br/>the plan"]
+    A["1. Interview the user<br/>(profile + goal)"] --> B["2. Write<br/>the plan"]
     B --> C["3. Write<br/>the lesson"]
     C --> D["4. Quiz<br/>the user"]
     D --> E{"Score:<br/>70% or more?"}
@@ -39,7 +41,10 @@ flowchart LR
 
 | | |
 |---|---|
+| 🧠 **Learner profile** | Before anything else, the agent interviews you: how you think, which explanations make things click, the tone and pace you like. The profile shapes the plan and the writing style of every lesson. |
+| 📚 **Learn from your own sources** | Say `learn from <URL|PDF|folder|repo>` and the plan is built from that material. Every lesson cites the exact sections it draws on. |
 | 🎯 **Goal intake** | The agent asks for your goal, your level, and your time budget before the first lesson. |
+| 💾 **You own the vault** | Every artifact is plain markdown in your Obsidian vault — portable, offline, publishable. Not a database, not a chat log. |
 | 🗺️ **Phased plans** | 3–6 phases. Each topic fits into one session of 60 minutes or less. |
 | 📖 **Lesson notes** | Complete lessons with diagrams, worked examples, common pitfalls, and self-check questions. You answer the questions in the note. |
 | ❓ **Real quizzes** | 5–8 questions per topic. The pass mark is 70%. Each answer gets an explanation. |
@@ -47,6 +52,26 @@ flowchart LR
 | 🔁 **Spaced repetition** | A review ladder from +1d to +90d. Reviews start with recall, not with re-reading. |
 | 🌐 **Current facts** | The tutor verifies versions and time-sensitive facts with web search. It cites the source and the access date in the note. |
 | 📊 **Dashboard** | One file lists your subjects, your progress, and the notes that are due for review. |
+
+## How it compares
+
+Other tutor skills exist — most are good. The honest differences:
+
+| | agent-tutor | [Bloom](https://github.com/Li-Evan/Bloom) | [agent-tutor-skill](https://github.com/Bhala-Srinivash/agent-tutor-skill) | [tutorial-creator](https://github.com/Terryc21/tutorial-creator) |
+|---|---|---|---|---|
+| Works on | **any agent** (70+) | Claude Code | Claude Code | Claude Code |
+| Learning lives in | **your Obsidian vault** | app DB / its folders | `~/.learn/` | project tutorials dir |
+| Learner profile | ✅ interview + teaching contract | reads annotations | ✅ diagnostic | ➖ |
+| Learn from your material | URL · PDF · folder · repo | ✅ | PDF · URL · code | your codebase |
+| Spaced repetition | +1d → +90d ladder | ➖ | ✅ FSRS | ➖ |
+| Honest-feedback contract | ✅ | ➖ | ✅ | ➖ |
+| Extra runtime | none | optional web app (Python + Node) | none | none |
+
+<sub>Feature snapshot, August 2026. Being honest is the house style: FSRS scheduling is objectively better than our fixed ladder — adaptive intervals are on the [roadmap](ROADMAP.md).</sub>
+
+## The pitch in one paragraph
+
+Chat is a great place to get answers and a terrible place to learn. agent-tutor moves learning out of the scroll: your agent interviews how *you* think, plans the subject in phases, writes each lesson as a real note in *your* vault, quizzes you like a strict tutor, and brings topics back before you forget them. Because everything is markdown on your disk, your learning journey is portable — keep it, publish it, or export it — and it works with whatever agent you use today and switch to tomorrow.
 
 ## Install
 
@@ -137,8 +162,10 @@ The agent interviews you and shows you a plan. After you approve the plan, the l
 ```
 Learning/
 ├── Dashboard.md                  # control center
+├── learner-profile.md            # how you learn — style contract for every lesson
 └── Rust/
     ├── plan.md                   # phases, checkboxes, success criteria
+    ├── sources.md                # material this subject is built from (when learning from sources)
     ├── notes/01-ownership.md     # the lesson, with self-check questions
     ├── quizzes/01-ownership-quiz.md
     ├── assets/ownership-model.svg
@@ -180,7 +207,9 @@ The skills are plain markdown. They have no runtime dependencies. They work on e
 
 ## Contributing
 
-Issues and pull requests are welcome. You can help with new templates, a better review schedule (for example SM-2), and lesson style.
+**Skills are just markdown — you do not need to write code to contribute.**
+
+Subject packs, translations, diagram recipes, and template improvements are all one-file pull requests. Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [ROADMAP.md](ROADMAP.md); issues labeled `good first issue` are ready to pick up.
 
 ## License
 
