@@ -4,6 +4,8 @@ name: pages
 # The example vault is Obsidian markdown: wikilinks and embeds are
 # converted to relative links with a small python step, then rendered
 # with the official Pages Jekyll builder. Static, read-only, no backend.
+# (This comment line re-triggers CI: the required `check` context only
+# started reporting after the skills-sync trigger fix landed on main.)
 
 on:
   push:
@@ -67,29 +69,29 @@ jobs:
               f.write_text(link_re.sub(sub, text), encoding="utf-8")
 
           landing = """---
-layout: default
----
+          layout: default
+          ---
 
-# agent-tutor — an example vault
+          # agent-tutor — an example vault
 
-This is the [example vault](https://github.com/Mohamed-El-Sharqawy/agent-tutor/tree/main/examples/vault)
-the tutor writes during real sessions: a dashboard with progress charts, a
-learner profile, a phased plan, a complete lesson with diagrams, a quiz
-report, and a session log. Everything is plain markdown you own.
+          This is the [example vault](https://github.com/Mohamed-El-Sharqawy/agent-tutor/tree/main/examples/vault)
+          the tutor writes during real sessions: a dashboard with progress charts, a
+          learner profile, a phased plan, a complete lesson with diagrams, a quiz
+          report, and a session log. Everything is plain markdown you own.
 
-- [Dashboard](Learning/Dashboard.md)
-- [Learner profile](Learning/learner-profile.md)
-- [Rust plan](Learning/Rust/plan.md)
-- [Lesson: the ownership model](Learning/Rust/notes/01-ownership-model.md)
-- [Quiz report](Learning/Rust/quizzes/01-ownership-model-quiz.md)
-- [Session log](Learning/Rust/logs/2026-02-19.md)
+          - [Dashboard](Learning/Dashboard.md)
+          - [Learner profile](Learning/learner-profile.md)
+          - [Rust plan](Learning/Rust/plan.md)
+          - [Lesson: the ownership model](Learning/Rust/notes/01-ownership-model.md)
+          - [Quiz report](Learning/Rust/quizzes/01-ownership-model-quiz.md)
+          - [Session log](Learning/Rust/logs/2026-02-19.md)
 
-Install the tutor for your agent:
+          Install the tutor for your agent:
 
-```bash
-npx skills add Mohamed-El-Sharqawy/agent-tutor
-```
-"""
+          ```bash
+          npx skills add Mohamed-El-Sharqawy/agent-tutor
+          ```
+          """
           (dst / "index.md").write_text(landing, encoding="utf-8")
           print("site prepared:", sum(1 for _ in dst.rglob("*.md")), "markdown files")
           EOF
