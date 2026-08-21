@@ -1,0 +1,113 @@
+name: pages
+
+# Publish examples/vault as the repo homepage (GitHub Pages).
+# The example vault is Obsidian markdown: wikilinks and embeds are
+# converted to relative links with a small python step, then rendered
+# with the official Pages Jekyll builder. Static, read-only, no backend.
+
+on:
+  push:
+    branches: [main]
+    paths: ["examples/vault/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - name: Prepare site (copy vault, convert wikilinks)
+        run: |
+          python3 - <<'EOF'
+          import os, re, shutil, pathlib
+
+          src = pathlib.Path("examples/vault")
+          dst = pathlib.Path("site")
+          if dst.exists():
+              shutil.rmtree(dst)
+          shutil.copytree(src, dst, ignore=shutil.ignore_patterns(".obsidian"))
+
+          # index: filename (without extension) -> absolute path
+          index = {}
+          for p in dst.rglob("*"):
+              if p.suffix in (".md", ".svg", ".png") and p.name != "index.md":
+                  index.setdefault(p.stem, p.resolve())
+
+          link_re = re.compile(r"(!?)\[\[([^\]|]+)(?:\|([^\]]+))?\]\]")
+
+          def resolve(from_file: pathlib.Path, target: str):
+              """Vault-wide name -> URL relative to the linking file."""
+              stem = pathlib.Path(target).stem
+              name = pathlib.Path(target).name
+              for key in (target, name, stem):
+                  if key in index:
+                      return os.path.relpath(index[key], from_file.parent).replace(os.sep, "/")
+              return None
+
+          for f in dst.rglob("*.md"):
+              text = f.read_text(encoding="utf-8")
+              def sub(m):
+                  embed, target, label = m.group(1), m.group(2).strip(), m.group(3)
+                  url = resolve(f, target)
+                  if url is None:
+                      return label or pathlib.Path(target).stem  # unresolvable: plain text, no broken link
+                  return f"{embed}[{label or pathlib.Path(target).stem}]({url})"
+              f.write_text(link_re.sub(sub, text), encoding="utf-8")
+
+          landing = """---
+layout: default
+---
+
+# agent-tutor — an example vault
+
+This is the [example vault](https://github.com/Mohamed-El-Sharqawy/agent-tutor/tree/main/examples/vault)
+the tutor writes during real sessions: a dashboard with progress charts, a
+learner profile, a phased plan, a complete lesson with diagrams, a quiz
+report, and a session log. Everything is plain markdown you own.
+
+- [Dashboard](Learning/Dashboard.md)
+- [Learner profile](Learning/learner-profile.md)
+- [Rust plan](Learning/Rust/plan.md)
+- [Lesson: the ownership model](Learning/Rust/notes/01-ownership-model.md)
+- [Quiz report](Learning/Rust/quizzes/01-ownership-model-quiz.md)
+- [Session log](Learning/Rust/logs/2026-02-19.md)
+
+Install the tutor for your agent:
+
+```bash
+npx skills add Mohamed-El-Sharqawy/agent-tutor
+```
+"""
+          (dst / "index.md").write_text(landing, encoding="utf-8")
+          print("site prepared:", sum(1 for _ in dst.rglob("*.md")), "markdown files")
+          EOF
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./site
+          destination: ./_site
+
+      - uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
