@@ -53,7 +53,7 @@ flowchart LR
 Use SVG when Mermaid can't express it: spatial layouts, annotated figures, simple scenes, custom concept maps with precise positioning.
 
 1. **If an `svg_save` tool is available**, use it — it validates the markup and writes to `<vault>/Learning/<Subject>/assets/<name>.svg`. Otherwise write the file yourself after checking the requirements below.
-2. Requirements: `xmlns` attribute, `viewBox`, `width="100%"`, `font-size ≥ 14`, inline attributes only (no CSS classes), transparent background, works on light **and** dark themes.
+2. Requirements: `xmlns` attribute, `viewBox`, `width="100%"`, `font-size ≥ 14`, inline attributes only (no CSS classes), transparent background, works on light **and** dark themes. Security: no `<script>` elements, no `<foreignObject>`, no references to remote URLs (no external `href`). SVG files are static pictures only.
 3. Embed with a relative link or wikilink to `Learning/<Subject>/assets/<name>.svg`.
 4. Keep it under ~100 elements. Simple shapes + text beat elaborate art every time.
 
