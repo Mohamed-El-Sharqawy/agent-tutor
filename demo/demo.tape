@@ -36,3 +36,6 @@ Sleep 4200ms
 Type "ls -R Learning"
 Enter
 Sleep 2500ms
+
+# ── epilogue: the dashboard as it renders in Obsidian ──────────
+Sleep 3000ms

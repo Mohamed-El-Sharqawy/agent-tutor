@@ -84,3 +84,8 @@ ${B}tutor>${N} Session logged → Learning/Rust/logs/$(date +%F).md
 ${D}tutor> session over — the notes are yours to keep.${N}
 EOF
 sleep 0.4
+
+# ── epilogue: the dashboard, as the user sees it in Obsidian ────
+# Pre-rendered so the terminal shows exactly what Obsidian renders:
+# the progress donut (SVG) + completion pie + review forecast (mermaid).
+demo/render_dashboard
