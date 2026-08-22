@@ -5,7 +5,10 @@ phase: 1
 topic: Borrowing & references
 status: planned
 created: 2026-02-21
-review: []
+review:
+  interval: 1      # current interval in days
+  ease: 2.5        # multiplier applied on a solid recall
+  due: 2026-02-22  # next review date
 tags: [rust, borrowing, references]
 ---
 

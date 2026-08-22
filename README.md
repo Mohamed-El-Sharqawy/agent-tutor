@@ -31,7 +31,7 @@ flowchart LR
     E -- "No" --> F["Teach the weak<br/>topics again"]
     F --> D
     E -- "Yes" --> G["5. Schedule<br/>the reviews"]
-    G --> H["6. Review after<br/>1 to 90 days"]
+    G --> H["6. Review at growing<br/>intervals"]
     H --> C
 ```
 
@@ -67,7 +67,7 @@ Other tutor skills exist — most are good. The honest differences:
 | Honest-feedback contract | ✅ | ➖ | ✅ | ➖ |
 | Extra runtime | none | optional web app (Python + Node) | none | none |
 
-<sub>Feature snapshot, August 2026. Being honest is the house style: FSRS scheduling is objectively better than our fixed ladder — adaptive intervals are on the [roadmap](ROADMAP.md).</sub>
+<sub>Feature snapshot, August 2026. Being honest is the house style: review scheduling is FSRS-inspired — intervals grow and shrink with your recall verdicts, uncapped by default.</sub>
 
 ## The pitch in one paragraph
 

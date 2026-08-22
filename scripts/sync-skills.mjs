@@ -40,10 +40,15 @@ const skills = readdirSync(source, { withFileTypes: true })
   .map((d) => d.name);
 
 for (const target of targets) {
-  rmSync(target, { recursive: true, force: true });
   mkdirSync(target, { recursive: true });
   for (const skill of skills) {
+    rmSync(join(target, skill), { recursive: true, force: true });
     cpSync(join(source, skill), join(target, skill), { recursive: true });
+  }
+  for (const entry of readdirSync(target)) {
+    if (!skills.includes(entry)) {
+      console.warn(`${relative(root, join(target, entry))}: not managed by sync-skills — left untouched`);
+    }
   }
   console.log(`${relative(root, target)}: ${skills.length} skills`);
 }

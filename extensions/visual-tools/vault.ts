@@ -11,14 +11,20 @@ import { join } from "node:path";
  */
 export const VAULT_ROOT = process.env.OBSIDIAN_VAULT || join(process.cwd(), "learning");
 
-/** Sanitize a subject/filename segment: strip path-hostile characters. */
+/** Windows reserves these device names (case-insensitive, also with extensions). */
+const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?$/i;
+
+/** Sanitize a subject/filename segment: strip path-hostile characters and names. */
 export function sanitizeSegment(name: string): string {
 	const s = name
+		.replace(/[\x00-\x1f\x7f]/g, "")
 		.trim()
 		.replace(/[\\/:*?"<>|#^[\]]/g, "-")
 		.replace(/\s+/g, " ")
 		.slice(0, 80)
-		.trim();
+		.trim()
+		.replace(/[. ]+$/, "");
+	if (WINDOWS_RESERVED.test(s)) return `_${s}`;
 	return s || "untitled";
 }
 

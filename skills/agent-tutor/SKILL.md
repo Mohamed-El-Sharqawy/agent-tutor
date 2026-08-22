@@ -241,13 +241,21 @@ Scheduling is **FSRS-inspired and adaptive** — intervals grow multiplicatively
 
 | Verdict | Effect |
 |---|---|
-| **Solid** | `interval = round(interval × ease)`, then `ease = min(ease + 0.05, max_ease)` |
+| **Solid** | `interval = round(interval × ease)` using the pre-update ease, then `ease = min(ease + 0.05, max_ease)` |
 | **Shaky but recoverable** | `interval = round(interval × 1.2)`, `ease = max(ease − 0.2, min_ease)` |
 | **Gone** | re-teach, reset `interval` to the initial interval, `ease = max(ease − 0.5, min_ease)`, flag for re-study |
 
-Defaults: initial interval `+1d`, ease `2.5`, `min_ease` 1.3, `max_ease` 3.5, **no maximum interval** — notes keep growing past 90 days as long as recall stays solid. The learner can override any of these with an optional `review_policy:` block in their learner profile.
+Defaults: initial interval `1d`, ease `2.5`, `min_ease` 1.3, `max_ease` 3.5, **no maximum interval**, fuzz on — notes keep growing past 90 days as long as recall stays solid. The learner can override any of these with an optional `review_policy:` block in their learner profile.
 
-Legacy notes whose `review:` field is still a ladder list (`[+1d, +3d, +7d]`) keep working: take the last entry as the current interval with default ease, and migrate them to the block format at the next review.
+Before writing a new schedule state, normalize the inputs, then compute:
+
+1. **Validate**: coerce numbers with `Number()`; missing/NaN/garbage values fall back to the defaults above. Sanity-check the policy: `initial_interval ≥ 1`, `min_ease ≤ max_ease`, `max_interval` null or `≥ initial_interval` — any invalid key falls back individually to its default.
+2. **Clamp ease** into `[min_ease, max_ease]`.
+3. **Compute the interval** from the verdict row using the pre-update ease; if `fuzz` is true, multiply by a fresh random ±5% factor (0.95–1.05).
+4. **Round half up to whole days**, minimum 1 day. Then cap at `max_interval` when set — ease changes are unaffected by the cap, and an interval stored above a lowered cap shrinks at its next review.
+5. **Recompute due**: `due = <date of this review> + interval days` — always from this review's date, never from the stale due date. On first learn, `due = created + initial_interval`.
+
+Legacy notes whose `review:` field is still a ladder list (`[+1d, +3d, +7d]`) keep working: parse each entry as `<int>d` (strip the `+`) and take the last entry as the current interval with default ease. An empty list (`review: []`), a missing or null `review:` key, or a non-numeric last entry means the note is brand-new: start it at `{interval: initial_interval, ease: policy ease, due: created + initial_interval}`. Migrate every legacy note to the block format at the next review.
 
 Review sessions are **recall-first** (user explains from memory before seeing the note) and **interleaved** (mix phases/subjects). If the `agent-tutor-review` skill is installed, load it for the full protocol; the above is a sufficient fallback.
 

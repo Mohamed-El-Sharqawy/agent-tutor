@@ -25,7 +25,7 @@ tags: [roadmap]
 
 ## Phase 3 — Retention engine
 
-- [ ] **Adaptive review intervals** — replace the fixed ladder with SM-2/FSRS-style scheduling computed from review verdicts (policy change in the skills; no runtime needed)
+- [x] **Adaptive review intervals** — shipped in Phase 1: FSRS-inspired scheduling computed from review verdicts (policy change in the skills; no runtime needed)
 - [ ] **Teach-back mode** — review variant where the learner explains the topic from memory and the tutor grades against the note
 - [ ] **Anki export** — review queue → CSV/.apkg from the vault (spaced-repetition users get a bridge instead of a wall)
 

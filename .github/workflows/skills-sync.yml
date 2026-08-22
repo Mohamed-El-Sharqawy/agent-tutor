@@ -71,7 +71,7 @@ jobs:
 
       - name: Smoke test — the skills CLI discovers all three skills
         run: |
-          OUT=$(npx -y skills@latest add . --list --yes)
+          OUT=$(npx -y skills@1.5.23 add . --list --yes)
           echo "$OUT"
           for s in agent-tutor agent-tutor-review agent-tutor-visualize; do
             echo "$OUT" | grep -q "$s" || { echo "::error::$s not discovered by the skills CLI"; exit 1; }

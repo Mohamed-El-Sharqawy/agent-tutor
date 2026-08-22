@@ -21,7 +21,7 @@ So I wrote agent-tutor — a set of skills (just markdown, MIT, no runtime) that
 
 - It interviews how I learn (analogies? diagrams? blunt feedback?) and stores a "teaching contract" at `Learning/learner-profile.md` — every lesson follows it
 - Phased plan, one lesson-note per topic (callouts, worked examples, self-check questions you answer inside the note)
-- Quizzes with a 70% pass mark and honest feedback, spaced-repetition reviews (+1d→+90d)
+- Quizzes with a 70% pass mark and honest feedback, spaced-repetition reviews with FSRS-inspired adaptive intervals
 - Dashboard.md gets progress donuts/forecast SVGs, updated as you go
 - Your existing vault is untouched — everything lives under `Learning/`
 
@@ -53,7 +53,7 @@ Works with a plain Claude Code install, or with the pi extensions for arrow-key 
 
 Repo: https://github.com/Mohamed-El-Sharqawy/agent-tutor
 
-Currently building: adaptive (FSRS) review scheduling and Anki export. What subject would you throw at it?
+Currently building: Anki export. What subject would you throw at it?
 
 ## r/ChatGPTCoding
 
@@ -70,5 +70,5 @@ Then the 5-step loop, install command, repo link, and one screenshot of the dash
 ## Comment policy (all subreddits)
 
 - Reply to every question within the first 2 hours
-- Be upfront about limitations unprompted (fixed review ladder, interview-based profile)
+- Be upfront about limitations unprompted (interview-based profile, no telemetry)
 - Never astroturf; if someone compares to Bloom or feynman-tutor, credit them honestly

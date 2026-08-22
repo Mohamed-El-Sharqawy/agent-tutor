@@ -13,18 +13,7 @@ import { StringEnum } from "@earendil-works/pi-ai";
 import { type ExtensionAPI, withFileMutationQueue } from "@earendil-works/pi-coding-agent";
 import { Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
-import { VAULT_ROOT } from "./visual-tools/vault";
-
-/** Sanitize a subject name into a safe path segment. */
-function sanitizeSubject(subject: string): string {
-	const s = subject
-		.trim()
-		.replace(/[\\/:*?"<>|#^[\]]/g, "-")
-		.replace(/\s+/g, " ")
-		.slice(0, 80)
-		.trim();
-	return s || "untitled";
-}
+import { VAULT_ROOT, sanitizeSegment } from "./visual-tools/vault";
 
 function pad(n: number): string {
 	return n.toString().padStart(2, "0");
@@ -71,7 +60,7 @@ export default function mdLog(pi: ExtensionAPI) {
 		parameters: LearningLogParams,
 
 		async execute(_toolCallId, params, _signal, _onUpdate, _ctx) {
-			const subject = sanitizeSubject(params.subject);
+			const subject = sanitizeSegment(params.subject);
 			const entryType = params.entryType ?? "session";
 
 			// Date validation / default
@@ -85,6 +74,7 @@ export default function mdLog(pi: ExtensionAPI) {
 			const time = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 			const icon = ENTRY_ICONS[entryType] ?? "📖";
 			const tags = ["learning-log", ...(params.tags ?? [])].map((t) => t.replace(/\s+/g, "-"));
+			const yamlTags = tags.map((t) => `"${t.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`);
 
 			const section = [
 				`## ${icon} ${time} — ${params.title.replace(/\n/g, " ")}`,
@@ -100,7 +90,7 @@ export default function mdLog(pi: ExtensionAPI) {
 				"type: log",
 				`subject: "${subject.replace(/"/g, "'")}"`,
 				`date: ${date}`,
-				`tags: [${tags.join(", ")}]`,
+				`tags: [${yamlTags.join(", ")}]`,
 				"---",
 				"",
 			].join("\n");

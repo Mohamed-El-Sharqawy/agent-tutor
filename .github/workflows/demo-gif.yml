@@ -24,7 +24,7 @@ jobs:
 
       - name: Render demo.gif with vhs
         run: |
-          docker run --rm -v "$PWD:/vhs" ghcr.io/charmbracelet/vhs demo/demo.tape
+          docker run --rm -v "$PWD:/vhs" ghcr.io/charmbracelet/vhs:v0.11.0 demo/demo.tape
 
       # Same-repo PRs: commit the rendered gif back to the PR branch
       # (the push re-triggers validate/check on the updated tree).

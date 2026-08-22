@@ -127,8 +127,49 @@ function loadAgents(agentsDir: string): AgentConfig[] {
 	return agents;
 }
 
+interface PiInvocation {
+	command: string;
+	args: string[];
+	shell: boolean;
+	windowsVerbatimArguments?: boolean;
+}
+
+/**
+ * Resolve pi's real JS entry point by reading its PATH shim, so the
+ * fallback can spawn node + script directly instead of going through
+ * a shell. Returns null when no readable shim is found.
+ */
+function resolvePiScript(): string | null {
+	if (process.platform !== "win32") return null;
+	const names = ["pi.cmd", "pi.bat", "pi"];
+	for (const dir of process.env.PATH?.split(";") ?? []) {
+		if (!dir.trim()) continue;
+		for (const name of names) {
+			const shim = path.join(dir.trim(), name);
+			if (!fs.existsSync(shim)) continue;
+			try {
+				const body = fs.readFileSync(shim, "utf-8");
+				for (const match of body.matchAll(/"([^"]+\.js)"/g)) {
+					const expanded = match[1].replace(/%dp0%(?:\\)?|%~dp0(?:\\)?/gi, `${path.dirname(shim)}\\`);
+					const entry = path.resolve(expanded);
+					if (fs.existsSync(entry)) return entry;
+				}
+			} catch {
+				// unreadable shim — keep scanning
+			}
+		}
+	}
+	return null;
+}
+
+/** Quote one argument for a cmd.exe command line (batch-file rules: double embedded quotes). */
+function quoteForCmd(arg: string): string {
+	const safe = arg.replace(/[\x00-\x1f\x7f]/g, " ");
+	return `"${safe.replace(/\\+$/, (m) => m + m).replace(/"/g, '""')}"`;
+}
+
 /** Resolve how to invoke pi: same script if possible, else "pi" from PATH. */
-function getPiInvocation(args: string[]): { command: string; args: string[]; shell: boolean } {
+function getPiInvocation(args: string[]): PiInvocation {
 	const currentScript = process.argv[1];
 	const isBunVirtualScript = currentScript?.startsWith("/$bunfs/root/");
 	if (currentScript && !isBunVirtualScript && fs.existsSync(currentScript)) {
@@ -142,8 +183,21 @@ function getPiInvocation(args: string[]): { command: string; args: string[]; she
 	}
 
 	// Generic runtime without a resolvable script: use pi from PATH.
-	// On Windows, pi is a .cmd shim, so spawn through a shell.
-	return { command: "pi", args, shell: process.platform === "win32" };
+	if (process.platform !== "win32") {
+		return { command: "pi", args, shell: false };
+	}
+	// On Windows pi is a .cmd shim, and spawning .cmd without a shell throws.
+	// Prefer the resolved JS entry; otherwise run the shim through cmd.exe with
+	// every argument hand-quoted so task text never reaches the parser raw.
+	// The program name stays unquoted: a leading quote makes cmd's /S mode strip
+	// the wrong closing quote (unquoting the tail) and breaks shims' %~dp0.
+	const piScript = resolvePiScript();
+	if (piScript) {
+		return { command: process.execPath, args: [piScript, ...args], shell: false };
+	}
+	const comspec = process.env.ComSpec || "cmd.exe";
+	const line = ["pi", ...args].map((arg, i) => (i === 0 ? arg : quoteForCmd(arg))).join(" ");
+	return { command: comspec, args: ["/d", "/s", "/c", line], shell: false, windowsVerbatimArguments: true };
 }
 
 interface UsageStats {
@@ -215,6 +269,7 @@ async function runSingleAgent(
 			const proc = spawn(invocation.command, invocation.args, {
 				cwd: defaultCwd,
 				shell: invocation.shell,
+				windowsVerbatimArguments: invocation.windowsVerbatimArguments ?? false,
 				stdio: ["ignore", "pipe", "pipe"],
 			});
 
