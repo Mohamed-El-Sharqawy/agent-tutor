@@ -23,7 +23,7 @@ tags: [learning, dashboard]
 
 ## 🗓️ Up for review
 
-- [[Rust/notes/01-ownership-model]] — +3d interval, due 2026-02-21
+- [[Rust/notes/01-ownership-model]] — +1d interval, due 2026-02-20
 
 ## ✅ Completed
 

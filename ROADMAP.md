@@ -12,7 +12,7 @@ tags: [roadmap]
 
 - [x] Intake → phased plan → lesson notes → quizzes → logs
 - [x] Honest feedback rules (never inflate; name the misconception)
-- [x] Spaced-repetition reviews (+1d → +90d ladder) + review queue on the dashboard
+- [x] Spaced-repetition reviews (FSRS-inspired adaptive intervals, uncapped by default) + review queue on the dashboard
 - [x] Diagram standards (Mermaid/SVG) + validators for pi
 - [x] Agent-agnostic install (Claude Code, Codex, Cursor, Windsurf, pi, 70+) with CI-enforced sync
 

@@ -5,7 +5,10 @@ phase: {{PHASE_NUMBER}}
 topic: {{TOPIC}}
 status: learned
 created: {{DATE}}
-review: [+1d, +3d, +7d]
+review:
+  interval: 1
+  ease: 2.5
+  due: {{DATE + 1 DAY}}
 tags: [{{subject-tag}}, {{topic-tags}}]
 ---
 

@@ -5,7 +5,10 @@ phase: 1
 topic: Ownership & moves
 status: learned
 created: 2026-02-19
-review: [+1d, +3d, +7d]
+review:
+  interval: 1
+  ease: 2.5
+  due: 2026-02-20
 tags: [rust, ownership, memory]
 ---
 
