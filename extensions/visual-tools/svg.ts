@@ -11,7 +11,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { withFileMutationQueue } from "@earendil-works/pi-coding-agent";
-import { assetPath, embedLink, vaultRelative } from "./vault.ts";
+import { assetPath, embedLink, sanitizeSegment, vaultRelative } from "./vault.ts";
 
 export interface SvgIssue {
 	severity: "error" | "warning";
@@ -135,10 +135,15 @@ export async function saveSvg(subject: string, filename: string, svg: string): P
 	});
 
 	const relativePath = vaultRelative(absolute);
+	const encodedPath = relativePath
+		.replace(/%/g, "%25")
+		.replace(/\(/g, "%28")
+		.replace(/\)/g, "%29")
+		.replace(/ /g, "%20");
 	return {
 		path: absolute,
 		relativePath,
 		wikilink: embedLink(absolute),
-		markdownEmbed: `![${filename}](${relativePath})`,
+		markdownEmbed: `![${sanitizeSegment(filename)}](${encodedPath})`,
 	};
 }

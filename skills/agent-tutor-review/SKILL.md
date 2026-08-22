@@ -26,7 +26,7 @@ Scheduling is **FSRS-inspired and adaptive** — no fixed ladder and no ceiling.
 
 | Verdict | Interval | Ease |
 |---|---|---|
-| **Solid** | `round(interval × ease)` | `+0.05`, up to `max_ease` |
+| **Solid** | `round(interval × ease)` using the pre-update ease | `+0.05`, up to `max_ease` |
 | **Shaky but recoverable** | `round(interval × 1.2)` | `−0.2`, down to `min_ease` |
 | **Gone** | reset to the initial interval | `−0.5`, down to `min_ease`; flag for re-study |
 
@@ -43,7 +43,15 @@ review_policy:
   fuzz: true            # ±5% jitter on computed due dates so notes don't pile up on one day
 ```
 
-Notes are never "done": a long interval just means the topic comes up rarely. Legacy notes whose `review:` field is a plain list (`[+1d, +3d, +7d]`) still work — take the last entry as the current interval with default ease, and migrate them to the block format at this review.
+Before writing a new schedule state, normalize the inputs, then compute:
+
+1. **Validate**: coerce numbers with `Number()`; missing/NaN/garbage values fall back to the defaults above. Sanity-check the policy: `initial_interval ≥ 1`, `min_ease ≤ max_ease`, `max_interval` null or `≥ initial_interval` — any invalid key falls back individually to its default.
+2. **Clamp ease** into `[min_ease, max_ease]`.
+3. **Compute the interval** from the verdict row using the pre-update ease; if `fuzz` is true, multiply by a fresh random ±5% factor (0.95–1.05).
+4. **Round half up to whole days**, minimum 1 day. Then cap at `max_interval` when set — ease changes are unaffected by the cap, and an interval stored above a lowered cap shrinks at its next review.
+5. **Recompute due**: `due = <date of this review> + interval days` — always from this review's date, never from the stale due date. On first learn, `due = created + initial_interval`.
+
+Notes are never "done": a long interval just means the topic comes up rarely. Legacy notes whose `review:` field is a plain list (`[+1d, +3d, +7d]`) still work — parse each entry as `<int>d` (strip the `+`) and take the last entry as the current interval with default ease. An empty list (`review: []`), a missing or null `review:` key, or a non-numeric last entry means the note is brand-new: start it at `{interval: initial_interval, ease: policy ease, due: created + initial_interval}`. Migrate every legacy note to the block format at this review.
 
 ## Running a review session
 

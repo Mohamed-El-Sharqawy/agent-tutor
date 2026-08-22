@@ -12,6 +12,8 @@ review:
 tags: [{{subject-tag}}, {{topic-tags}}]
 ---
 
+<!-- The interval/ease values in the frontmatter are defaults: use the learner profile's review_policy values (initial_interval, ease) when present. -->
+
 <!-- Before drafting: apply the teaching contract in [[learner-profile]] — analogy domains, density, layout, jargon pacing, tone. Delete this comment. -->
 
 > [!abstract] In 3 sentences
