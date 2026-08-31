@@ -68,9 +68,9 @@
     }
     .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
     .stat { text-align: center; padding: 14px 8px; }
-    .stat strong { display: block; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .stat strong { display: block; font-size: 1.5rem; letter-spacing: -0.02em; white-space: nowrap; }
     .stat span { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
-    .subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
     a.subject { display: block; text-decoration: none; color: inherit; }
     a.subject:hover { border-color: var(--accent); }
     .subject header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
@@ -81,14 +81,16 @@
       background: var(--accent-soft); color: var(--accent);
     }
     .badge.due { background: var(--warn-soft); color: var(--warn); }
-    .ring-row { display: flex; align-items: center; gap: 16px; }
-    .ring-row svg { width: 104px; height: 104px; flex: none; }
+    .ring-row { display: flex; align-items: center; gap: 14px; }
+    .ring-row svg { width: 88px; height: 88px; flex: none; }
     .ring-track { stroke: var(--track); }
     .ring-arc { stroke: var(--accent); }
     .ring-label { fill: var(--accent); font-size: 26px; font-weight: 700; }
-    .meta { list-style: none; padding: 0; font-size: 0.92rem; }
-    .meta li { display: flex; gap: 8px; padding: 3px 0; }
-    .meta li span { color: var(--muted); min-width: 96px; }
+    .meta { list-style: none; padding: 0; font-size: 0.9rem; flex: 1; min-width: 0; }
+    .meta li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 6px; padding: 3px 0; }
+    .meta li span { color: var(--muted); flex: 0 0 88px; }
+    .meta li b { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+    .meta li b.date { flex: 0 0 auto; white-space: nowrap; }
     .queue, .activity { list-style: none; padding: 0; }
     .queue li, .activity li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 0.95rem; }
     .queue li:first-child, .activity li:first-child { border-top: none; }
@@ -118,7 +120,8 @@
     <h2>📚 Active subjects</h2>
     <div class="subjects">
       <!-- One card per active subject. done_fraction = topics_done ÷ topics_total × 282.7 (r = 45); e.g. 12/28 → "121.1 282.7".
-           The whole card is one link to the subject's focus page — subjects/<slug>.html, relative. -->
+           The whole card is one link to the subject's focus page — subjects/<slug>.html, relative.
+           Keep every meta value wrapped in <b> (dates also class="date") — the label/value column layout depends on it. -->
       <a class="card subject" href="subjects/{{subject-slug}}.html">
         <header>
           <h3>{{subject}}</h3>
@@ -131,10 +134,10 @@
             <text class="ring-label" x="60" y="69" text-anchor="middle">{{pct}}%</text>
           </svg>
           <ul class="meta">
-            <li><span>Topics</span>{{done}}/{{all}}</li>
-            <li><span>Next up</span>{{next topic}}</li>
-            <li><span>Due</span>{{due notes}}</li>
-            <li><span>Last activity</span>{{date}}</li>
+            <li><span>Topics</span><b>{{done}}/{{all}}</b></li>
+            <li><span>Next up</span><b>{{next topic}}</b></li>
+            <li><span>Due</span><b>{{due notes}}</b></li>
+            <li><span>Last activity</span><b class="date">{{date}}</b></li>
           </ul>
         </div>
       </a>
