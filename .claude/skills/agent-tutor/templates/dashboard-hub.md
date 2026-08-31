@@ -18,4 +18,7 @@ tags: [learning, dashboard]
 **Subject pages:** <!-- one relative link per active subject, matching the overview cards -->
 [{{subject}}](subjects/{{subject-slug}}.html)
 
+**Markdown archive:** [Dashboard-archive-{{ARCHIVE_DATE}}.md](Dashboard-archive-{{ARCHIVE_DATE}}.md) — the full markdown dashboard kept when html mode started.
+<!-- Include the archive line only when a dated archive exists (markdown → html switch); remove it otherwise. -->
+
 <!-- Thin hub (html mode only): links to the generated pages. Never a parallel dashboard — progress and scheduling stay in plan.md, note frontmatter, and the Dashboard.html state island. -->
