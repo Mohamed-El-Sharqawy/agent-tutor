@@ -272,7 +272,7 @@ const islandHint = 'One JSON object: <!-- agent-tutor-state {...} -->.';
 // Log fragment files: the daily html logs under logs/ plus their template.
 const isLogFragment = (file) => {
   const rel = show(file);
-  return /(^|\/)logs\//.test(rel) || /\/templates\/log[-a-z]*\.html$/.test(rel);
+  return /(^|\/)logs\//.test(rel) || /\/templates\/log-entry\.html$/.test(rel);
 };
 
 let islandCount = 0;
