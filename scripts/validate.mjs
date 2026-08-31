@@ -19,7 +19,9 @@
  *                           agent-tutor-state island + color-scheme meta and
  *                           resolve every relative page-to-page href;
  *                           log fragment files (logs/ + their template) stay
- *                           bare body-level markup and carry no island
+ *                           bare body-level markup and carry no island;
+ *                           generated (non-template) pages carry no
+ *                           unfilled {{placeholder}} anywhere
  *
  * Pure node stdlib — no dependencies, no network. Exit 1 with a fix hint
  * for every failure.
@@ -339,17 +341,20 @@ for (const file of htmlFiles) {
   // Obsidian's HTML Reader and in a browser alike. Skipped: fragments,
   // schemes (https:, mailto:, …), data:, and {{placeholder}} hrefs in
   // templates (the same skip the mermaid check applies to template fences) —
-  // but a generated page that still carries a placeholder href is a failure,
-  // the unfilled-placeholder leak this skip would otherwise hide.
+  // generated pages must not carry placeholders at all (checked above the
+  // loop), so the href skip only ever spares template hrefs from resolving.
   const isTemplate = name.startsWith("skills/");
+  // Generated pages must not carry template placeholders anywhere — the href
+  // loop below only sees link targets, this catches every other attribute or
+  // text leak (e.g. an unfilled stroke-dasharray ring value). The inner
+  // run needs 1+ non-brace chars so literal brace pairs (Rust's
+  // `format!("{{}}")`) don't read as placeholders.
+  if (!isTemplate && /\{\{[^{}\r\n]+\}\}/.test(html))
+    fail("html", name, "Unfilled template placeholder in a generated page.", "Generated pages must fill every template placeholder.");
   let linkChecked = 0;
   for (const m of html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/gi)) {
     const href = m[1].trim();
-    if (href.includes("{{")) {
-      if (!isTemplate)
-        fail("html", name, `Unfilled template placeholder in href: ${href}`, "Generated pages must fill every template placeholder.");
-      continue;
-    }
+    if (href.includes("{{")) continue; // template href — generated pages already failed the check above
     if (href.startsWith("#")) continue;
     if (/^[a-z][a-z0-9+.-]*:/i.test(href)) continue; // scheme: https:, mailto:, data:, …
     linkChecked++;
