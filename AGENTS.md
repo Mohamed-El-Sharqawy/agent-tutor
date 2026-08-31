@@ -47,3 +47,25 @@ Never hardcode absolute vault paths in skills, extensions, or templates.
 - Skills follow the [Agent Skills](https://agentskills.io) spec: lowercase-hyphen `name`, specific `description` (< 1024 chars).
 - `npx skills add ./ --list` must discover all three skills; keep skill directories self-contained (no cross-skill file references — they break per-skill installs).
 - pi extensions: validate TS by loading (`pi` starts clean); peer deps only, no bundling.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues (Mohamed-El-Sharqawy/agent-tutor) via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default triage labels, each label string equal to its role name. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `CONTEXT.md` + `docs/adr/`. See `docs/agents/domain.md`.
+
+## Delivery workflow (how agents land work)
+
+- Trunk-based with PRs. **Never commit feature work directly to `main`.**
+- Before starting any ticket or issue: `git switch main && git pull origin main`, then create the branch (`feat/<issue>-<slug>`, or `fix/…`, `chore/…`, `docs/…`). Branch **first** — all work commits to that branch.
+- After the work (including `/implement`'s built-in `/code-review`): push the branch, open a PR with `gh pr create` (link the issue in the body), then `gh pr checks --watch`.
+- When every required check is green: merge with a merge commit (`gh pr merge --merge --delete-branch`), then `git switch main && git pull origin main`. A red check → fix and push to the same branch; never bypass checks or force-push.
+- `/implement <issue>` on a fresh session means: do all of the above for that issue, end to end, without asking.
