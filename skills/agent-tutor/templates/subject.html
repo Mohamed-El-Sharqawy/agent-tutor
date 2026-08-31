@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{{subject}} — Focus</title>
+  <!--
+    Per-subject focus page — the drill-down behind one overview card.
+    Regenerate the WHOLE file at every update-the-Dashboard moment, together
+    with the overview; never hand-patch a previous copy. Fill the
+    {{placeholders}} and replace the worked-example state island at the top of
+    <body> with live data — the SAME island as the overview page (full schema,
+    numbers as numbers); this page renders one subject's slice of it.
+    Slices: due notes = the island's due_notes[] entries belonging to this
+    subject (same "Subject · note" naming the overview queue uses); activity =
+    the recent[] lines belonging to this subject; next topics = the next
+    unfinished topics from the subject's plan.md (first one = the island's
+    "next"). Delete sections that have no content.
+    File name: Learning/subjects/{{subject-slug}}.html — slug = subject name,
+    lowercase, spaces/punctuation → hyphens (e.g. "Machine Learning" →
+    "machine-learning"). The overview card and the hub link here with the
+    relative href "subjects/{{subject-slug}}.html"; the back link is
+    "../Dashboard.html" ({{DASHBOARD_HREF}} stands in for it so the template
+    stays validator-clean).
+    Keep this page self-contained: inline CSS only, no scripts, no external
+    references. Chart strokes ride CSS variables so the page re-themes with
+    prefers-color-scheme. Ring math: circumference C = 2π × r = 282.7 for
+    r = 45; dash arc = {{done_fraction}} × C (e.g. 12/28 topics → 121.1 282.7).
+  -->
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --card: #ffffff;
+      --ink: #18181b;
+      --muted: #6b7280;
+      --line: #e4e4e7;
+      --accent: #0891b2;
+      --accent-soft: #ecfeff;
+      --warn: #b45309;
+      --warn-soft: #fef3c7;
+      --track: #e4e4e7;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #101014;
+        --card: #1b1b22;
+        --ink: #f4f4f5;
+        --muted: #a1a1aa;
+        --line: #2b2b34;
+        --accent: #22d3ee;
+        --accent-soft: #103a47;
+        --warn: #fbbf24;
+        --warn-soft: #3b2f0b;
+        --track: #2b2b34;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      padding: 24px 16px 48px;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    a.back {
+      display: inline-block; margin-bottom: 14px; color: var(--muted);
+      text-decoration: none; font-size: 0.9rem;
+    }
+    a.back:hover { color: var(--accent); }
+    header.top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    h1 { font-size: 1.5rem; letter-spacing: -0.02em; }
+    .updated { color: var(--muted); font-size: 0.9rem; }
+    h2 { font-size: 1.05rem; margin-bottom: 12px; }
+    section { margin-top: 28px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+    .badge {
+      display: inline-block; padding: 2px 10px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 600;
+      background: var(--accent-soft); color: var(--accent);
+    }
+    .badge.due { background: var(--warn-soft); color: var(--warn); }
+    .hero { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .hero svg { width: 128px; height: 128px; flex: none; }
+    .ring-track { stroke: var(--track); }
+    .ring-arc { stroke: var(--accent); }
+    .ring-label { fill: var(--accent); font-size: 26px; font-weight: 700; }
+    .meta { list-style: none; padding: 0; font-size: 0.95rem; }
+    .meta li { display: flex; gap: 8px; padding: 3px 0; }
+    .meta li span { color: var(--muted); min-width: 96px; }
+    .topics, .queue, .activity { list-style: none; padding: 0; }
+    .topics li, .queue li, .activity li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 0.95rem; }
+    .topics li:first-child, .queue li:first-child, .activity li:first-child { border-top: none; }
+    .topics li strong { color: var(--accent); font-weight: 600; margin-right: 6px; }
+    .queue em, .activity time { color: var(--muted); font-style: normal; font-size: 0.85rem; }
+    .empty { color: var(--muted); font-size: 0.92rem; }
+    footer { margin-top: 32px; color: var(--muted); font-size: 0.8rem; text-align: center; }
+  </style>
+</head>
+<body>
+<!-- agent-tutor-state {"updated":"2026-08-31","subjects":[{"name":"Machine Learning","phase":2,"phases":4,"topics_done":12,"topics_total":28,"next":"07-gradient-descent","due":3,"last_activity":"2026-08-30"}],"due_notes":[{"note":"ML · 06-backprop","due":"2026-08-31","interval":"6d"}],"recent":["2026-08-30 — ML: gradient descent lesson, quiz 7/8"]} -->
+
+<div class="wrap">
+  <a class="back" href="{{DASHBOARD_HREF}}">← All subjects</a>
+  <header class="top">
+    <h1>📚 {{subject}}</h1>
+    <span class="badge">Phase {{n}}/{{total}}</span>
+  </header>
+
+  <section class="card hero" aria-label="Progress">
+    <svg viewBox="0 0 120 120" role="img" aria-label="{{subject}} progress {{pct}}%">
+      <circle class="ring-track" cx="60" cy="60" r="45" stroke-width="12" fill="none"/>
+      <circle class="ring-arc" cx="60" cy="60" r="45" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="{{done_fraction}} 282.7" transform="rotate(-90 60 60)"/>
+      <text class="ring-label" x="60" y="69" text-anchor="middle">{{pct}}%</text>
+    </svg>
+    <ul class="meta">
+      <li><span>Topics</span>{{done}}/{{all}}</li>
+      <li><span>Next up</span>{{next topic}}</li>
+      <li><span>Due</span>{{due notes}}</li>
+      <li><span>Last activity</span>{{date}}</li>
+    </ul>
+  </section>
+
+  <section aria-label="Due for review">
+    <h2>🗓️ Up for review</h2>
+    <div class="card">
+      <ul class="queue">
+        <!-- This subject's due notes only, sorted by due date. Empty → the .empty line. -->
+        <li><span class="badge due">due {{date}}</span> {{note}} <em>{{interval}} interval</em></li>
+        <!-- <li class="empty">Nothing due — keep the streak.</li> -->
+      </ul>
+    </div>
+  </section>
+
+  <section aria-label="Next topics">
+    <h2>🧭 Next topics</h2>
+    <div class="card">
+      <ul class="topics">
+        <!-- Next 3–5 unfinished topics from the subject's plan.md; the first is the island's "next". -->
+        <li><strong>→</strong> {{next topic}}</li>
+        <li>{{following topic}}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-label="Recent activity">
+    <h2>📝 Recent activity</h2>
+    <div class="card">
+      <ul class="activity">
+        <!-- This subject's lines from the island's recent[]. -->
+        <li><time>{{date}}</time> — {{one-line summary of the session}}</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>Auto-generated by agent-tutor — regenerated whole at every update; hand edits are lost.</footer>
+</div>
+</body>
+</html>
