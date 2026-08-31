@@ -93,9 +93,11 @@
     .ring-track { stroke: var(--track); }
     .ring-arc { stroke: var(--accent); }
     .ring-label { fill: var(--accent); font-size: 26px; font-weight: 700; }
-    .meta { list-style: none; padding: 0; font-size: 0.95rem; }
-    .meta li { display: flex; gap: 8px; padding: 3px 0; }
-    .meta li span { color: var(--muted); min-width: 96px; }
+    .meta { list-style: none; padding: 0; font-size: 0.95rem; flex: 1; min-width: 0; }
+    .meta li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; padding: 3px 0; }
+    .meta li span { color: var(--muted); flex: 0 0 96px; }
+    .meta li b { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+    .meta li b.date { flex: 0 0 auto; white-space: nowrap; }
     .topics, .queue, .activity { list-style: none; padding: 0; }
     .topics li, .queue li, .activity li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 0.95rem; }
     .topics li:first-child, .queue li:first-child, .activity li:first-child { border-top: none; }
@@ -121,11 +123,12 @@
       <circle class="ring-arc" cx="60" cy="60" r="45" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="{{done_fraction}} 282.7" transform="rotate(-90 60 60)"/>
       <text class="ring-label" x="60" y="69" text-anchor="middle">{{pct}}%</text>
     </svg>
+    <!-- Meta values stay wrapped in <b> (dates also class="date") — the label/value column layout depends on it. -->
     <ul class="meta">
-      <li><span>Topics</span>{{done}}/{{all}}</li>
-      <li><span>Next up</span>{{next topic}}</li>
-      <li><span>Due</span>{{due notes}}</li>
-      <li><span>Last activity</span>{{date}}</li>
+      <li><span>Topics</span><b>{{done}}/{{all}}</b></li>
+      <li><span>Next up</span><b>{{next topic}}</b></li>
+      <li><span>Due</span><b>{{due notes}}</b></li>
+      <li><span>Last activity</span><b class="date">{{date}}</b></li>
     </ul>
   </section>
 

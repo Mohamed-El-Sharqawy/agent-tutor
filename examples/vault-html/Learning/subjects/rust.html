@@ -67,9 +67,11 @@
     .ring-track { stroke: var(--track); }
     .ring-arc { stroke: var(--accent); }
     .ring-label { fill: var(--accent); font-size: 26px; font-weight: 700; }
-    .meta { list-style: none; padding: 0; font-size: 0.95rem; }
-    .meta li { display: flex; gap: 8px; padding: 3px 0; }
-    .meta li span { color: var(--muted); min-width: 96px; }
+    .meta { list-style: none; padding: 0; font-size: 0.95rem; flex: 1; min-width: 0; }
+    .meta li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; padding: 3px 0; }
+    .meta li span { color: var(--muted); flex: 0 0 96px; }
+    .meta li b { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+    .meta li b.date { flex: 0 0 auto; white-space: nowrap; }
     .topics, .queue, .activity { list-style: none; padding: 0; }
     .topics li, .queue li, .activity li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 0.95rem; }
     .topics li:first-child, .queue li:first-child, .activity li:first-child { border-top: none; }
@@ -96,10 +98,10 @@
       <text class="ring-label" x="60" y="69" text-anchor="middle">7%</text>
     </svg>
     <ul class="meta">
-      <li><span>Topics</span>1/14</li>
-      <li><span>Next up</span>02 Borrowing &amp; references</li>
-      <li><span>Due</span>1 note</li>
-      <li><span>Last activity</span>2026-02-19</li>
+      <li><span>Topics</span><b>1/14</b></li>
+      <li><span>Next up</span><b>02 Borrowing &amp; references</b></li>
+      <li><span>Due</span><b>1 note</b></li>
+      <li><span>Last activity</span><b class="date">2026-02-19</b></li>
     </ul>
   </section>
 
