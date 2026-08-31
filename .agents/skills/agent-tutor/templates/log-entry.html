@@ -1,0 +1,107 @@
+<!--
+  Html-mode daily log — what gets APPENDED to Learning/<Subject>/logs/YYYY-MM-DD.html
+  (profile sets output_format.logs: html).
+
+  The daily file is bare fragments. The FIRST entry of the day creates the file
+  with the <style> scaffold below plus its filled entry; every later session
+  appends one <section class="log-entry"> at the end of the file. Entries stack
+  earliest-first through the day. Browsers and the Obsidian HTML Reader render
+  the fragments directly — no document wrapper, ever.
+
+  Contract: body-level markup only — no document tags (html/head/body, DOCTYPE),
+  no scripts, no external references, no agent-tutor-state island. Logs are
+  history; dashboards own the island. Same-date .md and .html logs coexist;
+  never convert or rewrite past entries.
+
+  Entry anatomy: time · type badge · short title · 2–5 sentence body · optional
+  score line (only when a quiz or review produced a score).
+  Icons: 📖 session · 🧠 lesson · ❓ quiz · 💬 feedback · 🏁 milestone · 🔁 review.
+  Fill the {{placeholders}} and drop what a given entry doesn't need.
+-->
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --ink: #18181b;
+    --muted: #6b7280;
+    --line: #e4e4e7;
+    --accent: #0891b2;
+    --accent-soft: #ecfeff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101014;
+      --card: #1b1b22;
+      --ink: #f4f4f5;
+      --muted: #a1a1aa;
+      --line: #2b2b34;
+      --accent: #22d3ee;
+      --accent-soft: #103a47;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+  .log-entry {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+  }
+  .log-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .log-time { font: 600 13px/1.4 ui-monospace, Consolas, monospace; color: var(--muted); }
+  .log-title { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+  .log-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .log-entry p { margin-top: 8px; font-size: 0.95rem; }
+  .log-score { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
+  .log-score strong { color: var(--accent); }
+</style>
+
+<!-- Worked example — filled entries as they land in the vault (earliest first). -->
+<section class="log-entry">
+  <div class="log-head">
+    <span class="log-time">09:05</span>
+    <span class="log-title">🔁 Review — ML · 06-backprop</span>
+    <span class="log-badge">review</span>
+  </div>
+  <p>Recalled the chain-rule framing from memory; stumbled on computational-graph ordering. Verdict: solid. Interval 6d → 15d, next due 2026-09-15.</p>
+</section>
+
+<section class="log-entry">
+  <div class="log-head">
+    <span class="log-time">14:20</span>
+    <span class="log-title">🧠 Topic 07 — Gradient descent</span>
+    <span class="log-badge">lesson</span>
+  </div>
+  <p>Covered cost functions, the update rule, and learning-rate behaviour. The cooking analogy (turning the stove down as the soup nears done) landed well. Weak spot: distinguishing convergence from oscillation.</p>
+  <p class="log-score">Quiz: <strong>7/8 (88%)</strong> — passed · re-quiz not needed</p>
+</section>
+
+<!-- Skeleton — the fragment shape to fill per entry. -->
+<section class="log-entry">
+  <div class="log-head">
+    <span class="log-time">{{HH:MM}}</span>
+    <span class="log-title">{{icon}} {{Short title}}</span>
+    <span class="log-badge">{{type: session | lesson | quiz | feedback | milestone | review}}</span>
+  </div>
+  <p>{{2–5 sentences: what was studied, scores, gaps found, next steps.}}</p>
+  <!-- <p class="log-score">Quiz: <strong>{{7/8 (88%)}}</strong> — {{verdict}}</p> -->
+</section>
