@@ -28,6 +28,7 @@ templates are inside skills/<skill>/templates/
 scripts/sync-skills.mjs    ← regenerates the generated copies from skills/
 docs/                      ← research + launch materials
 examples/vault/            ← the sample Obsidian vault (rendered on Pages)
+examples/vault-html/       ← the html-mode sample vault (dashboard + logs in html)
 ```
 
 **Why three copies of `skills/`?** Different agents read skills from different folders. They are generated so the repo works out of the box in every agent. CI fails if `skills/` and the copies drift.
