@@ -15,4 +15,7 @@ tags: [learning, dashboard]
 - **Notes due for review:** 1
 - **Updated:** 2026-02-19
 
-**Subject pages:** [Rust](subjects/rust.html)
+**Subject pages:**
+[Rust](subjects/rust.html) · [lesson board](../Rust/board.html)
+
+<!-- Thin hub (html mode only): links to the generated pages. Never a parallel dashboard — progress and scheduling stay in plan.md, note frontmatter, and the Dashboard.html state island. -->

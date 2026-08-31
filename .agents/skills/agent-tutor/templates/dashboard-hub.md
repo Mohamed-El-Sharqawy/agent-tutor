@@ -15,8 +15,8 @@ tags: [learning, dashboard]
 - **Notes due for review:** {{due}}
 - **Updated:** {{DATE}}
 
-**Subject pages:** <!-- one relative link per active subject, matching the overview cards -->
-[{{subject}}](subjects/{{subject-slug}}.html)
+**Subject pages:** <!-- one line per active subject, matching the overview cards -->
+[{{subject}}](subjects/{{subject-slug}}.html) · [lesson board](../{{subject}}/board.html) <!-- ../{{subject}}/ = the subject's real folder name, URL-encode spaces -->
 
 **Markdown archive:** [Dashboard-archive-{{ARCHIVE_DATE}}.md](Dashboard-archive-{{ARCHIVE_DATE}}.md) — the full markdown dashboard kept when html mode started.
 <!-- Include the archive line only when a dated archive exists (markdown → html switch); remove it otherwise. -->

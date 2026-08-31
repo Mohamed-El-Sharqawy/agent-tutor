@@ -172,7 +172,7 @@ Learning/
     └── logs/2026-02-19.md        # session journal
 ```
 
-See [`examples/vault/`](examples/vault/) for a filled example with a real lesson, a quiz report, and a log. Prefer the HTML dashboard and styled logs? [`examples/vault-html/`](examples/vault-html/) is the same idea in html mode.
+See [`examples/vault/`](examples/vault/) for a filled example with a real lesson, a quiz report, and a log. Prefer the HTML dashboard and styled logs? [`examples/vault-html/`](examples/vault-html/) is the same idea in html mode — a Warm Paper dashboard, per-subject focus pages, and a kanban lesson board per subject showing what every lesson builds on.
 
 ### The notes in Obsidian
 
@@ -205,7 +205,7 @@ output_format:
 
 [![The HTML dashboard in a browser](demo/screenshots/dashboard-html.png)](demo/screenshots/dashboard-html.png)
 
-*Figure: the HTML dashboard from the [html-mode sample vault](examples/vault-html/). A stat row, a per-subject card with a progress ring, the review queue, and recent activity. Every card links to a per-subject focus page, and session logs become styled daily entries in the same look.*
+*Figure: the HTML dashboard from the [html-mode sample vault](examples/vault-html/). A stat row, a per-subject card with a progress ring, the review queue, and recent activity. Every card links to a per-subject focus page, every subject owns a kanban lesson board (`board.html`) that maps each lesson to the one it builds on, and session logs become styled daily entries in the same look.*
 
 You choose it at intake (the tutor suggests html), it applies to every subject, and you can switch at any time — the next dashboard write appears in the new format and the old one is kept as a dated archive. Absent block means markdown: upgrading never changes an existing vault until you opt in.
 
