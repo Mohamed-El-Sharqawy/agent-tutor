@@ -16,12 +16,13 @@ tags: [roadmap]
 - [x] Diagram standards (Mermaid/SVG) + validators for pi
 - [x] Agent-agnostic install (Claude Code, Codex, Cursor, Windsurf, pi, 70+) with CI-enforced sync
 
-## Phase 2 — Personalization & sources (in review)
+## Phase 2 — Personalization & sources (shipped) ✅
 
-- [ ] Learner profile: interview + teaching contract → PR #1
-- [ ] Source ingestion: learn from URL/PDF/folder/repo → PR #2
-- [ ] README repositioning (agent-agnostic × vault-owned) → PR #3
-- [ ] Example vault published as homepage → PR #4
+- [x] Learner profile: interview + teaching contract → PR #1
+- [x] Source ingestion: learn from URL/PDF/folder/repo → PR #2
+- [x] README repositioning (agent-agnostic × vault-owned) → PR #3
+- [x] Example vault published as homepage → PR #4
+- [x] HTML dashboard & logs: per-artifact `output_format` toggle, Cards-style HTML dashboard + per-subject focus pages, styled daily logs, thin markdown hub, non-breaking markdown default → issues #26–#32
 
 ## Phase 3 — Retention engine
 
@@ -46,3 +47,4 @@ tags: [roadmap]
 ## Progress log
 
 - 2026-08-21 — Roadmap created from `docs/market-research.md`.
+- 2026-08-31 — Phase 2 shipped, including the HTML dashboard & logs release (tutor skill v6).

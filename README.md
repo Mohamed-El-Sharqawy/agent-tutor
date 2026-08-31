@@ -51,7 +51,7 @@ flowchart LR
 | 🧂 **Honest feedback** | The tutor does not please you. It names the exact misconception behind each wrong answer. |
 | 🔁 **Spaced repetition** | FSRS-inspired scheduling that adapts to your recall — no fixed ceiling. Reviews start with recall, not with re-reading. |
 | 🌐 **Current facts** | The tutor verifies versions and time-sensitive facts with web search. It cites the source and the access date in the note. |
-| 📊 **Dashboard** | One file lists your subjects, your progress, and the notes that are due for review. |
+| 📊 **Dashboard** | One file lists your subjects, your progress, and the notes that are due for review. Pick markdown tables or a styled HTML control center (see [HTML mode](#html-mode)). |
 
 ## How it compares
 
@@ -172,7 +172,7 @@ Learning/
     └── logs/2026-02-19.md        # session journal
 ```
 
-See [`examples/vault/`](examples/vault/) for a filled example with a real lesson, a quiz report, and a log.
+See [`examples/vault/`](examples/vault/) for a filled example with a real lesson, a quiz report, and a log. Prefer the HTML dashboard and styled logs? [`examples/vault-html/`](examples/vault-html/) is the same idea in html mode.
 
 ### The notes in Obsidian
 
@@ -192,6 +192,26 @@ These screenshots show the real notes from the demo vault. The lesson note is th
 <td width="50%" valign="top"><a href="demo/screenshots/log.png"><img src="demo/screenshots/log.png" alt="The session log in Obsidian"></a><br><sub><b>Session log.</b> What you studied, the score, and the next steps.</sub></td>
 </tr>
 </table>
+
+## HTML mode
+
+Dashboards and logs do not have to be tables. One block in the learner profile picks the format, per artifact:
+
+```yaml
+output_format:
+  dashboard: html   # markdown (default) | html
+  logs: html        # markdown | html
+```
+
+[![The HTML dashboard in a browser](demo/screenshots/dashboard-html.png)](demo/screenshots/dashboard-html.png)
+
+*Figure: the HTML dashboard from the [html-mode sample vault](examples/vault-html/). A stat row, a per-subject card with a progress ring, the review queue, and recent activity. Every card links to a per-subject focus page, and session logs become styled daily entries in the same look.*
+
+You choose it at intake (html is the suggested default), it applies to every subject, and you can switch at any time — the next dashboard write appears in the new format and the old one is kept as a dated archive. Absent block means markdown: upgrading never changes an existing vault until you opt in.
+
+The HTML pages are plain, self-contained files: no JavaScript, no external resources, inline CSS, and automatic light/dark theming. The tutor regenerates them whole at every update, and your plan checkboxes and note frontmatter stay the source of truth — the pages are a view, never a database. Lessons, plans, and quiz reports stay markdown in every mode.
+
+**Viewing the dashboard:** open `Dashboard.html` in any browser, zero setup. In Obsidian, the free [HTML Reader](https://obsidian.md/plugins?id=obsidian-html-plugin) community plugin renders the page right in your vault — when html mode starts, the tutor mentions this once and points at the plugin; installing it is a manual, human-only step. Without the plugin you still lose nothing: a thin markdown `Dashboard.md` hub links to every HTML page, and the tutor itself reads the state embedded in the page, not the visuals.
 
 ## Why honest feedback
 
