@@ -7,106 +7,150 @@
   <title>Rust — Focus</title>
   <style>
     :root {
-      --bg: #f5f6f8;
-      --card: #ffffff;
-      --ink: #18181b;
-      --muted: #6b7280;
-      --line: #e4e4e7;
-      --accent: #0891b2;
-      --accent-soft: #ecfeff;
-      --warn: #b45309;
-      --warn-soft: #fef3c7;
-      --track: #e4e4e7;
+      --bg: #FAF9F5;
+      --card: #FFFFFF;
+      --ink: #141413;
+      --soft: #3D3D3A;
+      --muted: #87867F;
+      --line: #D1CFC5;
+      --line-soft: #F0EEE6;
+      --accent: #D97757;
+      --accent-d: #B85C3E;
+      --accent-soft: #F7E5DC;
+      --olive: #788C5D;
+      --olive-soft: #EBEFDF;
+      --warn: #C78E3F;
+      --warn-soft: #F5EBD8;
+      --track: #E6E3DA;
+      --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #101014;
-        --card: #1b1b22;
-        --ink: #f4f4f5;
-        --muted: #a1a1aa;
-        --line: #2b2b34;
-        --accent: #22d3ee;
-        --accent-soft: #103a47;
-        --warn: #fbbf24;
-        --warn-soft: #3b2f0b;
-        --track: #2b2b34;
+        --bg: #1B1A17;
+        --card: #25231E;
+        --ink: #EDEAE2;
+        --soft: #CFCCC0;
+        --muted: #A39D90;
+        --line: #3B382F;
+        --line-soft: #2A2823;
+        --accent: #E28B69;
+        --accent-d: #EB9F7F;
+        --accent-soft: #3D2A20;
+        --olive: #A3B684;
+        --olive-soft: #2C3522;
+        --warn: #DDB065;
+        --warn-soft: #3B2F14;
+        --track: #3B382F;
       }
     }
     * { box-sizing: border-box; margin: 0; }
     body {
       background: var(--bg);
       color: var(--ink);
-      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      padding: 24px 16px 48px;
+      font: 15.5px/1.55 var(--sans);
+      -webkit-font-smoothing: antialiased;
+      padding: 40px 20px 56px;
     }
-    .wrap { max-width: 760px; margin: 0 auto; }
+    .wrap { max-width: 980px; margin: 0 auto; }
     a.back {
-      display: inline-block; margin-bottom: 14px; color: var(--muted);
-      text-decoration: none; font-size: 0.9rem;
+      display: inline-block; margin-bottom: 18px; color: var(--muted);
+      text-decoration: none; font: 500 12px var(--mono); letter-spacing: 0.04em;
     }
     a.back:hover { color: var(--accent); }
-    header.top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    h1 { font-size: 1.5rem; letter-spacing: -0.02em; }
-    .updated { color: var(--muted); font-size: 0.9rem; }
-    h2 { font-size: 1.05rem; margin-bottom: 12px; }
-    section { margin-top: 28px; }
+    .eyebrow {
+      font: 600 11.5px/1 var(--mono); letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    }
+    .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+    h1 {
+      font: 500 clamp(1.7rem, 3.6vw, 2.3rem)/1.1 var(--serif);
+      letter-spacing: -0.016em;
+    }
+    .mast-row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; }
+    .updated { color: var(--muted); font: 500 12px var(--mono); }
+    .masthead { padding-bottom: 22px; border-bottom: 1.5px solid var(--line); }
+    .board-link {
+      display: inline-block; margin-top: 16px; padding: 4px 12px; border-radius: 999px;
+      border: 1.5px solid var(--line); background: var(--card);
+      font: 600 11px/1.5 var(--mono); letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--soft); text-decoration: none;
+      transition: border-color 120ms, color 120ms;
+    }
+    .board-link:hover { border-color: var(--accent); color: var(--accent-d); }
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font: 600 11px/1.4 var(--mono); letter-spacing: 0.04em;
+      background: var(--accent-soft); color: var(--accent-d);
+      white-space: nowrap;
+    }
+    .badge.due { background: var(--warn-soft); color: var(--warn); }
+    .sec-head { display: flex; align-items: baseline; gap: 12px; margin: 36px 0 14px; }
+    .sec-head .idx { font: 600 12px var(--mono); color: var(--accent); }
+    .sec-head h2 { font: 500 1.35rem/1.2 var(--serif); letter-spacing: -0.012em; }
+    .sec-head .count {
+      font: 11px var(--mono); color: var(--muted);
+      background: var(--line-soft); border-radius: 999px; padding: 2px 8px;
+    }
     .card {
       background: var(--card);
-      border: 1px solid var(--line);
+      border: 1.5px solid var(--line);
       border-radius: 14px;
       padding: 16px 18px;
     }
-    .badge {
-      display: inline-block; padding: 2px 10px; border-radius: 999px;
-      font-size: 0.78rem; font-weight: 600;
-      background: var(--accent-soft); color: var(--accent);
-    }
-    .badge.due { background: var(--warn-soft); color: var(--warn); }
-    .hero { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-    .hero svg { width: 128px; height: 128px; flex: none; }
+    .hero { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+    .hero svg { width: 120px; height: 120px; flex: none; }
     .ring-track { stroke: var(--track); }
     .ring-arc { stroke: var(--accent); }
-    .ring-label { fill: var(--accent); font-size: 26px; font-weight: 700; }
-    .meta { list-style: none; padding: 0; font-size: 0.95rem; flex: 1; min-width: 0; }
+    .ring-label { fill: var(--ink); font: 500 24px var(--serif); }
+    .meta { list-style: none; padding: 0; font-size: 0.94rem; flex: 1; min-width: 0; }
     .meta li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; padding: 3px 0; }
-    .meta li span { color: var(--muted); flex: 0 0 96px; }
+    .meta li span { color: var(--muted); flex: 0 0 96px; font-size: 0.84rem; }
     .meta li b { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
-    .meta li b.date { flex: 0 0 auto; white-space: nowrap; }
-    .topics, .queue, .activity { list-style: none; padding: 0; }
-    .topics li, .queue li, .activity li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 0.95rem; }
-    .topics li:first-child, .queue li:first-child, .activity li:first-child { border-top: none; }
-    .topics li strong { color: var(--accent); font-weight: 600; margin-right: 6px; }
-    .queue em, .activity time { color: var(--muted); font-style: normal; font-size: 0.85rem; }
+    .meta li b.date { flex: 0 0 auto; white-space: nowrap; font-family: var(--mono); font-size: 0.86rem; }
+    .queue, .activity { list-style: none; padding: 0; }
+    .queue li, .activity li { padding: 9px 0; border-top: 1px solid var(--line-soft); font-size: 0.94rem; }
+    .queue li:first-child, .activity li:first-child { border-top: none; }
+    .queue em, .activity time { color: var(--muted); font-style: normal; font-size: 0.84rem; font-family: var(--mono); }
     .empty { color: var(--muted); font-size: 0.92rem; }
-    footer { margin-top: 32px; color: var(--muted); font-size: 0.8rem; text-align: center; }
+    footer {
+      margin-top: 44px; padding-top: 18px; border-top: 1.5px solid var(--line);
+      color: var(--muted); font-size: 0.8rem; text-align: center;
+    }
   </style>
 </head>
 <body>
-<!-- agent-tutor-state {"updated":"2026-02-19","subjects":[{"name":"Rust","phase":1,"phases":4,"topics_done":1,"topics_total":14,"next":"02-borrowing","due":1,"last_activity":"2026-02-19"}],"due_notes":[{"note":"Rust · 01-ownership-model","due":"2026-02-20","interval":"1d"}],"recent":["2026-02-19 — Rust: topic 1.1 ownership & moves, quiz 6/8"]} -->
+<!-- agent-tutor-state {"updated":"2026-02-19","subjects":[{"name":"Rust","phase":1,"phases":4,"topics_done":1,"topics_total":12,"next":"02-borrowing","due":1,"last_activity":"2026-02-19"}],"due_notes":[{"note":"Rust · 01-ownership-model","due":"2026-02-20","interval":"1d"}],"recent":["2026-02-19 — Rust: topic 1.1 ownership & moves, quiz 6/8"]} -->
 
 <div class="wrap">
   <a class="back" href="../Dashboard.html">← All subjects</a>
-  <header class="top">
-    <h1>📚 Rust</h1>
-    <span class="badge">Phase 1/4</span>
+  <header class="masthead">
+    <p class="eyebrow">Subject focus · Phase 1 of 4</p>
+    <div class="mast-row">
+      <h1>Rust</h1>
+      <p class="updated">updated 2026-02-19</p>
+    </div>
+    <a class="board-link" href="../Rust/board.html">Lesson board →</a>
   </header>
 
-  <section class="card hero" aria-label="Progress">
-    <svg viewBox="0 0 120 120" role="img" aria-label="Rust progress 7%">
+  <section class="card hero" aria-label="Progress" style="margin-top: 26px;">
+    <svg viewBox="0 0 120 120" role="img" aria-label="Rust progress 8%">
       <circle class="ring-track" cx="60" cy="60" r="45" stroke-width="12" fill="none"/>
-      <circle class="ring-arc" cx="60" cy="60" r="45" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="20.2 282.7" transform="rotate(-90 60 60)"/>
-      <text class="ring-label" x="60" y="69" text-anchor="middle">7%</text>
+      <circle class="ring-arc" cx="60" cy="60" r="45" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="23.6 282.7" transform="rotate(-90 60 60)"/>
+      <text class="ring-label" x="60" y="69" text-anchor="middle">8%</text>
     </svg>
     <ul class="meta">
-      <li><span>Topics</span><b>1/14</b></li>
-      <li><span>Next up</span><b>02 Borrowing &amp; references</b></li>
+      <li><span>Topics</span><b>1/12</b></li>
+      <li><span>Next up</span><b>1.2 Borrowing &amp; references</b></li>
       <li><span>Due</span><b>1 note</b></li>
       <li><span>Last activity</span><b class="date">2026-02-19</b></li>
     </ul>
   </section>
 
   <section aria-label="Due for review">
-    <h2>🗓️ Up for review</h2>
+    <div class="sec-head"><span class="idx">01</span><h2>Up for review</h2><span class="count">1</span></div>
     <div class="card">
       <ul class="queue">
         <li><span class="badge due">due 2026-02-20</span> 01-ownership-model <em>1d interval</em></li>
@@ -114,19 +158,8 @@
     </div>
   </section>
 
-  <section aria-label="Next topics">
-    <h2>🧭 Next topics</h2>
-    <div class="card">
-      <ul class="topics">
-        <li><strong>→</strong> 02 Borrowing &amp; references</li>
-        <li>03 Lifetimes (the 80% you actually need)</li>
-        <li>04 Slices &amp; the string family</li>
-      </ul>
-    </div>
-  </section>
-
   <section aria-label="Recent activity">
-    <h2>📝 Recent activity</h2>
+    <div class="sec-head"><span class="idx">02</span><h2>Recent activity</h2><span class="count">1</span></div>
     <div class="card">
       <ul class="activity">
         <li><time>2026-02-19</time> — Topic 1.1 Ownership &amp; moves learned; quiz 6/8 (75%, passed). Watch: move semantics vs Copy types.</li>

@@ -7,102 +7,152 @@
   <title>Learning Dashboard</title>
   <style>
     :root {
-      --bg: #f5f6f8;
-      --card: #ffffff;
-      --ink: #18181b;
-      --muted: #6b7280;
-      --line: #e4e4e7;
-      --accent: #0891b2;
-      --accent-soft: #ecfeff;
-      --warn: #b45309;
-      --warn-soft: #fef3c7;
-      --track: #e4e4e7;
+      --bg: #FAF9F5;
+      --card: #FFFFFF;
+      --ink: #141413;
+      --soft: #3D3D3A;
+      --muted: #87867F;
+      --line: #D1CFC5;
+      --line-soft: #F0EEE6;
+      --accent: #D97757;
+      --accent-d: #B85C3E;
+      --accent-soft: #F7E5DC;
+      --olive: #788C5D;
+      --olive-soft: #EBEFDF;
+      --warn: #C78E3F;
+      --warn-soft: #F5EBD8;
+      --track: #E6E3DA;
+      --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #101014;
-        --card: #1b1b22;
-        --ink: #f4f4f5;
-        --muted: #a1a1aa;
-        --line: #2b2b34;
-        --accent: #22d3ee;
-        --accent-soft: #103a47;
-        --warn: #fbbf24;
-        --warn-soft: #3b2f0b;
-        --track: #2b2b34;
+        --bg: #1B1A17;
+        --card: #25231E;
+        --ink: #EDEAE2;
+        --soft: #CFCCC0;
+        --muted: #A39D90;
+        --line: #3B382F;
+        --line-soft: #2A2823;
+        --accent: #E28B69;
+        --accent-d: #EB9F7F;
+        --accent-soft: #3D2A20;
+        --olive: #A3B684;
+        --olive-soft: #2C3522;
+        --warn: #DDB065;
+        --warn-soft: #3B2F14;
+        --track: #3B382F;
       }
     }
     * { box-sizing: border-box; margin: 0; }
     body {
       background: var(--bg);
       color: var(--ink);
-      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      padding: 24px 16px 48px;
+      font: 15.5px/1.55 var(--sans);
+      -webkit-font-smoothing: antialiased;
+      padding: 40px 20px 56px;
     }
-    .wrap { max-width: 960px; margin: 0 auto; }
-    header.top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    h1 { font-size: 1.6rem; letter-spacing: -0.02em; }
-    .updated { color: var(--muted); font-size: 0.9rem; }
-    h2 { font-size: 1.05rem; margin-bottom: 12px; }
-    section { margin-top: 28px; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .eyebrow {
+      font: 600 11.5px/1 var(--mono); letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+    h1 {
+      font: 500 clamp(1.9rem, 4vw, 2.6rem)/1.08 var(--serif);
+      letter-spacing: -0.018em;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+    .mast-row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; }
+    .updated { color: var(--muted); font: 500 12px var(--mono); }
+    .masthead { padding-bottom: 22px; border-bottom: 1.5px solid var(--line); }
+    .sec-head { display: flex; align-items: baseline; gap: 12px; margin: 36px 0 14px; }
+    .sec-head .idx { font: 600 12px var(--mono); color: var(--accent); }
+    .sec-head h2 { font: 500 1.35rem/1.2 var(--serif); letter-spacing: -0.012em; }
+    .sec-head .count {
+      font: 11px var(--mono); color: var(--muted);
+      background: var(--line-soft); border-radius: 999px; padding: 2px 8px;
+    }
     .card {
       background: var(--card);
-      border: 1px solid var(--line);
+      border: 1.5px solid var(--line);
       border-radius: 14px;
       padding: 16px 18px;
     }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
-    .stat { text-align: center; padding: 14px 8px; }
-    .stat strong { display: block; font-size: 1.5rem; letter-spacing: -0.02em; white-space: nowrap; }
-    .stat span { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
-    .subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
-    a.subject { display: block; text-decoration: none; color: inherit; }
-    a.subject:hover { border-color: var(--accent); }
-    .subject header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-    .subject h3 { font-size: 1rem; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 26px; }
+    .stat { padding: 14px 16px 12px; }
+    .stat strong {
+      display: block; font: 500 1.9rem/1.1 var(--serif);
+      letter-spacing: -0.02em; white-space: nowrap; color: var(--ink);
+    }
+    .stat span {
+      display: block; margin-top: 5px;
+      font: 600 10.5px/1 var(--mono); text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted);
+    }
+    .subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    a.subject {
+      display: block; text-decoration: none; color: inherit;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+    }
+    a.subject:hover {
+      transform: translateY(-3px); border-color: var(--ink);
+      box-shadow: 0 10px 30px rgba(20, 20, 19, 0.10);
+    }
+    .subject header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .subject h3 { font: 500 1.15rem/1.25 var(--serif); letter-spacing: -0.008em; }
     .badge {
-      display: inline-block; padding: 2px 10px; border-radius: 999px;
-      font-size: 0.78rem; font-weight: 600;
-      background: var(--accent-soft); color: var(--accent);
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font: 600 11px/1.4 var(--mono); letter-spacing: 0.04em;
+      background: var(--accent-soft); color: var(--accent-d);
+      white-space: nowrap;
     }
     .badge.due { background: var(--warn-soft); color: var(--warn); }
-    .ring-row { display: flex; align-items: center; gap: 14px; }
+    .ring-row { display: flex; align-items: center; gap: 16px; }
     .ring-row svg { width: 88px; height: 88px; flex: none; }
     .ring-track { stroke: var(--track); }
     .ring-arc { stroke: var(--accent); }
-    .ring-label { fill: var(--accent); font-size: 26px; font-weight: 700; }
+    .ring-label { fill: var(--ink); font: 500 22px var(--serif); }
     .meta { list-style: none; padding: 0; font-size: 0.9rem; flex: 1; min-width: 0; }
-    .meta li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 6px; padding: 3px 0; }
-    .meta li span { color: var(--muted); flex: 0 0 88px; }
+    .meta li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; padding: 3px 0; }
+    .meta li span { color: var(--muted); flex: 0 0 88px; font-size: 0.82rem; }
     .meta li b { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
-    .meta li b.date { flex: 0 0 auto; white-space: nowrap; }
+    .meta li b.date { flex: 0 0 auto; white-space: nowrap; font-family: var(--mono); font-size: 0.84rem; }
     .queue, .activity { list-style: none; padding: 0; }
-    .queue li, .activity li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 0.95rem; }
+    .queue li, .activity li { padding: 9px 0; border-top: 1px solid var(--line-soft); font-size: 0.94rem; }
     .queue li:first-child, .activity li:first-child { border-top: none; }
-    .queue em, .activity time { color: var(--muted); font-style: normal; font-size: 0.85rem; }
+    .queue em, .activity time { color: var(--muted); font-style: normal; font-size: 0.84rem; font-family: var(--mono); }
     .empty { color: var(--muted); font-size: 0.92rem; }
-    footer { margin-top: 32px; color: var(--muted); font-size: 0.8rem; text-align: center; }
+    footer {
+      margin-top: 44px; padding-top: 18px; border-top: 1.5px solid var(--line);
+      color: var(--muted); font-size: 0.8rem; text-align: center;
+    }
     @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
-<!-- agent-tutor-state {"updated":"2026-02-19","subjects":[{"name":"Rust","phase":1,"phases":4,"topics_done":1,"topics_total":14,"next":"02-borrowing","due":1,"last_activity":"2026-02-19"}],"due_notes":[{"note":"Rust · 01-ownership-model","due":"2026-02-20","interval":"1d"}],"recent":["2026-02-19 — Rust: topic 1.1 ownership & moves, quiz 6/8"]} -->
+<!-- agent-tutor-state {"updated":"2026-02-19","subjects":[{"name":"Rust","phase":1,"phases":4,"topics_done":1,"topics_total":12,"next":"02-borrowing","due":1,"last_activity":"2026-02-19"}],"due_notes":[{"note":"Rust · 01-ownership-model","due":"2026-02-20","interval":"1d"}],"recent":["2026-02-19 — Rust: topic 1.1 ownership & moves, quiz 6/8"]} -->
 
 <div class="wrap">
-  <header class="top">
-    <h1>🎓 Learning Dashboard</h1>
-    <p class="updated">Updated 2026-02-19</p>
+  <header class="masthead">
+    <p class="eyebrow">Agent-tutor · Overview</p>
+    <div class="mast-row">
+      <h1>Learning <em>dashboard</em></h1>
+      <p class="updated">updated 2026-02-19</p>
+    </div>
   </header>
 
   <section class="stats" aria-label="Overview">
     <div class="card stat"><strong>1</strong><span>Active subjects</span></div>
-    <div class="card stat"><strong>1/14</strong><span>Topics done</span></div>
+    <div class="card stat"><strong>1/12</strong><span>Topics done</span></div>
     <div class="card stat"><strong>1</strong><span>Notes due</span></div>
-    <div class="card stat"><strong>2026-02-19</strong><span>Last activity</span></div>
+    <div class="card stat"><strong>02-19</strong><span>Last activity</span></div>
   </section>
 
   <section aria-label="Subjects">
-    <h2>📚 Active subjects</h2>
+    <div class="sec-head"><span class="idx">01</span><h2>Active subjects</h2><span class="count">1</span></div>
     <div class="subjects">
       <a class="card subject" href="subjects/rust.html">
         <header>
@@ -110,14 +160,14 @@
           <span class="badge">Phase 1/4</span>
         </header>
         <div class="ring-row">
-          <svg viewBox="0 0 120 120" role="img" aria-label="Rust progress 7%">
+          <svg viewBox="0 0 120 120" role="img" aria-label="Rust progress 8%">
             <circle class="ring-track" cx="60" cy="60" r="45" stroke-width="12" fill="none"/>
-            <circle class="ring-arc" cx="60" cy="60" r="45" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="20.2 282.7" transform="rotate(-90 60 60)"/>
-            <text class="ring-label" x="60" y="69" text-anchor="middle">7%</text>
+            <circle class="ring-arc" cx="60" cy="60" r="45" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="23.6 282.7" transform="rotate(-90 60 60)"/>
+            <text class="ring-label" x="60" y="69" text-anchor="middle">8%</text>
           </svg>
           <ul class="meta">
-            <li><span>Topics</span><b>1/14</b></li>
-            <li><span>Next up</span><b>02 Borrowing &amp; references</b></li>
+            <li><span>Topics</span><b>1/12</b></li>
+            <li><span>Next up</span><b>1.2 Borrowing &amp; references</b></li>
             <li><span>Due</span><b>1 note</b></li>
             <li><span>Last activity</span><b class="date">2026-02-19</b></li>
           </ul>
@@ -127,7 +177,7 @@
   </section>
 
   <section aria-label="Review queue">
-    <h2>🗓️ Up for review</h2>
+    <div class="sec-head"><span class="idx">02</span><h2>Up for review</h2><span class="count">1</span></div>
     <div class="card">
       <ul class="queue">
         <li><span class="badge due">due 2026-02-20</span> Rust · 01-ownership-model <em>1d interval</em></li>
@@ -136,10 +186,10 @@
   </section>
 
   <section aria-label="Recent activity">
-    <h2>📝 Recent activity</h2>
+    <div class="sec-head"><span class="idx">03</span><h2>Recent activity</h2><span class="count">1</span></div>
     <div class="card">
       <ul class="activity">
-        <li><time>2026-02-19</time> — Topic 1.1 Ownership model learned; quiz 6/8 (75%, passed). Watch: move semantics vs Copy types.</li>
+        <li><time>2026-02-19</time> — Rust: topic 1.1 ownership &amp; moves, quiz 6/8</li>
       </ul>
     </div>
   </section>

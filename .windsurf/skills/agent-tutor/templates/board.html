@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{{subject}} — Lesson board</title>
+  <!--
+    Per-subject lesson board — a standalone kanban of the subject's whole plan.
+    Regenerate the WHOLE file at every update-the-Dashboard moment, together
+    with the overview and the subject's focus page; never hand-patch a
+    previous copy. Fill the {{placeholders}} and replace the worked-example
+    state island at the top of <body> with live data — the SAME island as the
+    overview and focus pages.
+    File name: Learning/<Subject>/board.html — the subject's real folder name
+    (e.g. "Learning/System Design/board.html"). Every board ships with a
+    same-named markdown signpost Learning/<Subject>/board.md from
+    templates/board-hub.md — Obsidian hides .html files without the HTML
+    Reader plugin, and the stub is what makes the board visible there.
+    Links: back to the overview ("../Dashboard.html", {{DASHBOARD_HREF}}
+    stands in) and to the subject's focus page
+    ("../subjects/<subject-slug>.html", {{FOCUS_HREF}} stands in). The focus
+    page and the hub link here with the matching relative hrefs.
+    Keep this page self-contained: inline CSS only, no scripts, no external
+    references, re-themes with prefers-color-scheme.
+    Style: Warm Paper — same system as the overview and focus pages.
+
+    BOARD CONTENT — one card per plan item, read straight off the subject's
+    plan.md: every numbered topic AND every phase gate (quiz / problem set /
+    final assessment — whatever checkbox lines the plan carries between
+    topics), in plan order. Columns:
+      done         — topics checked "- [x]" in plan.md
+      now          — exactly one card: the island's "next" topic
+      this phase   — remaining unchecked items of the current phase
+      later phases — every item of the phases below the current one
+    Parent lineage — every card carries "↳ <parent>", the item it builds on:
+      parent = the previous item in plan order (topic → topic, gate ← last
+      topic of its phase, first topic of a phase ← the previous phase's last
+      gate); the very first item of the subject shows "↳ root". Never invent
+      dependencies plan.md doesn't imply — plan order IS the lineage.
+    Card anatomy: mono id row (✓ on done · pills: now / quiz / practice /
+    final / due <date>) → title (short plan title) → "↳ parent" line; done
+    topic cards add the note file name as a footer line; gate cards add
+    their pass threshold. A done topic whose note sits in the due queue gets
+    an amber "due <date>" pill.
+  -->
+  <style>
+    :root {
+      --bg: #FAF9F5;
+      --card: #FFFFFF;
+      --ink: #141413;
+      --soft: #3D3D3A;
+      --muted: #87867F;
+      --line: #D1CFC5;
+      --line-soft: #F0EEE6;
+      --accent: #D97757;
+      --accent-d: #B85C3E;
+      --accent-soft: #F7E5DC;
+      --olive: #788C5D;
+      --olive-soft: #EBEFDF;
+      --warn: #C78E3F;
+      --warn-soft: #F5EBD8;
+      --track: #E6E3DA;
+      --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1B1A17;
+        --card: #25231E;
+        --ink: #EDEAE2;
+        --soft: #CFCCC0;
+        --muted: #A39D90;
+        --line: #3B382F;
+        --line-soft: #2A2823;
+        --accent: #E28B69;
+        --accent-d: #EB9F7F;
+        --accent-soft: #3D2A20;
+        --olive: #A3B684;
+        --olive-soft: #2C3522;
+        --warn: #DDB065;
+        --warn-soft: #3B2F14;
+        --track: #3B382F;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font: 15.5px/1.55 var(--sans);
+      -webkit-font-smoothing: antialiased;
+      padding: 40px 20px 56px;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; }
+    .crumbs { display: flex; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+    .crumbs a {
+      color: var(--muted); text-decoration: none;
+      font: 500 12px var(--mono); letter-spacing: 0.04em;
+    }
+    .crumbs a:hover { color: var(--accent); }
+    .eyebrow {
+      font: 600 11.5px/1 var(--mono); letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+    }
+    .eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--accent); }
+    h1 {
+      font: 500 clamp(1.7rem, 3.6vw, 2.3rem)/1.1 var(--serif);
+      letter-spacing: -0.016em;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+    .mast-row { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; }
+    .updated { color: var(--muted); font: 500 12px var(--mono); }
+    .masthead { padding-bottom: 22px; border-bottom: 1.5px solid var(--line); }
+
+    /* ── lesson board (kanban) ─────────────────── */
+    .board-scroll { overflow-x: auto; padding: 26px 2px 6px; }
+    .board { display: grid; grid-template-columns: repeat(4, minmax(236px, 1fr)); gap: 14px; min-width: 0; }
+    .kcol { min-width: 236px; }
+    .khead {
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding-bottom: 8px; border-bottom: 1.5px solid var(--line); margin-bottom: 12px;
+    }
+    .khead span {
+      font: 600 11px/1 var(--mono); letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .khead span::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+    .kcol.done .khead span::before { background: var(--olive); }
+    .kcol.now .khead span::before { background: var(--accent); }
+    .kcol.phase .khead span::before { background: var(--ink); }
+    .khead b { font: 600 11px/1 var(--mono); color: var(--muted); }
+    .kcard {
+      background: var(--card); border: 1.5px solid var(--line);
+      border-radius: 10px; padding: 10px 12px; margin-bottom: 10px;
+    }
+    .kcard .rid {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      font: 600 11px/1 var(--mono); color: var(--muted);
+    }
+    .kcard.done .rid .id::before { content: "✓ "; color: var(--olive); }
+    .kcard .t {
+      font: 600 0.88rem/1.35 var(--sans); margin: 5px 0 2px;
+      overflow-wrap: anywhere;
+    }
+    .kcard .sub { font-size: 0.78rem; color: var(--muted); }
+    .kcard .par {
+      font: 500 10.5px/1.5 var(--mono); color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .kcard .par b { color: var(--soft); font-weight: 600; }
+    .kcard .file {
+      font: 500 10.5px/1.4 var(--mono); color: var(--muted);
+      border-top: 1px solid var(--line-soft); margin-top: 8px; padding-top: 7px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .kcard.now { border-color: var(--accent); box-shadow: 0 6px 18px rgba(217, 119, 87, 0.14); }
+    .pill {
+      display: inline-block; padding: 2px 7px; border-radius: 999px;
+      font: 600 9.5px/1.4 var(--mono); letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pill.now { background: var(--accent-soft); color: var(--accent-d); }
+    .pill.due { background: var(--warn-soft); color: var(--warn); }
+    .pill.quiz { background: var(--line-soft); color: var(--soft); }
+    .empty-col { color: var(--muted); font-size: 0.85rem; padding: 4px 2px; }
+    footer {
+      margin-top: 44px; padding-top: 18px; border-top: 1.5px solid var(--line);
+      color: var(--muted); font-size: 0.8rem; text-align: center;
+    }
+    @media (max-width: 760px) {
+      .board { grid-template-columns: repeat(4, 236px); }
+    }
+  </style>
+</head>
+<body>
+<!-- agent-tutor-state {"updated":"2026-08-31","subjects":[{"name":"Machine Learning","phase":2,"phases":4,"topics_done":12,"topics_total":28,"next":"07-gradient-descent","due":3,"last_activity":"2026-08-30"}],"due_notes":[{"note":"ML · 06-backprop","due":"2026-08-31","interval":"6d"}],"recent":["2026-08-30 — ML: gradient descent lesson, quiz 7/8"]} -->
+
+<div class="wrap">
+  <nav class="crumbs">
+    <a href="{{DASHBOARD_HREF}}">← All subjects</a>
+    <a href="{{FOCUS_HREF}}">{{subject}} focus →</a>
+  </nav>
+  <header class="masthead">
+    <p class="eyebrow">{{subject}} · Phase {{n}} of {{total}}</p>
+    <div class="mast-row">
+      <h1>{{subject}} · <em>lesson board</em></h1>
+      <p class="updated">updated {{DATE}}</p>
+    </div>
+  </header>
+
+  <div class="board-scroll">
+    <div class="board">
+      <!-- One card per plan item — EVERY topic and phase gate of the whole plan, none skipped.
+           Column rules and parent lineage: see the comment at the top of this file. -->
+
+      <div class="kcol done">
+        <div class="khead"><span>Done</span><b>{{n}}</b></div>
+        <!-- Latest done first. -->
+        <div class="kcard done">
+          <div class="rid"><span class="id">1.2</span><span class="pill due">due {{date}}</span></div>
+          <div class="t">{{lesson title}}</div>
+          <div class="par">↳ <b>1.1</b> {{parent slug}}</div>
+          <div class="file">notes/02-load-balancers-cdn.md</div>
+        </div>
+        <div class="kcard done">
+          <div class="rid"><span class="id">1.1</span></div>
+          <div class="t">{{lesson title}}</div>
+          <div class="par">↳ <b>root</b></div>
+          <div class="file">notes/01-scaling-estimation.md</div>
+        </div>
+        <!-- …one kcard per remaining checked topic… -->
+        <!-- Empty column → <p class="empty-col">Nothing yet — {{next topic id}} is waiting.</p> -->
+      </div>
+
+      <div class="kcol now">
+        <div class="khead"><span>Now</span><b>1</b></div>
+        <div class="kcard now">
+          <div class="rid"><span class="id">1.3</span><span class="pill now">now</span></div>
+          <div class="t">{{next topic title — the island's "next"}}</div>
+          <div class="par">↳ <b>1.2</b> {{parent slug}}</div>
+        </div>
+      </div>
+
+      <div class="kcol phase">
+        <div class="khead"><span>This phase</span><b>{{n}}</b></div>
+        <div class="kcard">
+          <div class="rid"><span class="id">1.4</span></div>
+          <div class="t">{{topic title}}</div>
+          <div class="par">↳ <b>1.3</b> {{parent slug}}</div>
+        </div>
+        <div class="kcard">
+          <div class="rid"><span class="id">Q1</span><span class="pill quiz">quiz</span></div>
+          <div class="t">Phase 1 quiz</div>
+          <div class="sub">pass ≥ 70%</div>
+          <div class="par">↳ <b>1.6</b> {{parent slug}}</div>
+        </div>
+        <!-- …remaining unchecked items of the current phase (quizzes, problem sets, …)… -->
+      </div>
+
+      <div class="kcol later">
+        <div class="khead"><span>Later phases</span><b>{{n}}</b></div>
+        <div class="kcard">
+          <div class="rid"><span class="id">2.1</span></div>
+          <div class="t">{{topic title}}</div>
+          <div class="par">↳ <b>Q1</b> Phase 1 quiz</div>
+        </div>
+        <!-- …every item of the phases below the current one, in plan order… -->
+        <!-- Empty column → <p class="empty-col">Nothing later — final stretch.</p> -->
+      </div>
+    </div>
+  </div>
+
+  <footer>Auto-generated by agent-tutor — regenerated whole at every update; hand edits are lost.</footer>
+</div>
+</body>
+</html>

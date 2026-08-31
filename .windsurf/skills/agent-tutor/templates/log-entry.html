@@ -23,62 +23,70 @@
   score line (only when a quiz or review produced a score).
   Icons: 📖 session · 🧠 lesson · ❓ quiz · 💬 feedback · 🏁 milestone · 🔁 review.
   Fill the {{placeholders}} and drop what a given entry doesn't need.
+  Style: Warm Paper — same system as the html dashboards (ivory, paper cards,
+  serif titles, mono labels, clay accent). Only the scaffold's <style> block
+  carries it; existing log files are never rewritten.
 -->
 <style>
   :root {
-    --bg: #f5f6f8;
-    --card: #ffffff;
-    --ink: #18181b;
-    --muted: #6b7280;
-    --line: #e4e4e7;
-    --accent: #0891b2;
-    --accent-soft: #ecfeff;
+    --bg: #FAF9F5;
+    --card: #FFFFFF;
+    --ink: #141413;
+    --muted: #87867F;
+    --line: #D1CFC5;
+    --line-soft: #F0EEE6;
+    --accent: #D97757;
+    --accent-d: #B85C3E;
+    --accent-soft: #F7E5DC;
+    --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #101014;
-      --card: #1b1b22;
-      --ink: #f4f4f5;
-      --muted: #a1a1aa;
-      --line: #2b2b34;
-      --accent: #22d3ee;
-      --accent-soft: #103a47;
+      --bg: #1B1A17;
+      --card: #25231E;
+      --ink: #EDEAE2;
+      --muted: #A39D90;
+      --line: #3B382F;
+      --line-soft: #2A2823;
+      --accent: #E28B69;
+      --accent-d: #EB9F7F;
+      --accent-soft: #3D2A20;
     }
   }
   * { box-sizing: border-box; margin: 0; }
   body {
     background: var(--bg);
     color: var(--ink);
-    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font: 15.5px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     max-width: 720px;
     margin: 0 auto;
-    padding: 24px 16px 48px;
+    padding: 28px 16px 48px;
   }
   .log-entry {
     background: var(--card);
-    border: 1px solid var(--line);
+    border: 1.5px solid var(--line);
     border-left: 4px solid var(--accent);
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 14px 18px;
     margin-bottom: 14px;
   }
   .log-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .log-time { font: 600 13px/1.4 ui-monospace, Consolas, monospace; color: var(--muted); }
-  .log-title { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+  .log-time { font: 600 12px/1.4 var(--mono); color: var(--muted); }
+  .log-title { font: 500 1.02rem/1.3 var(--serif); letter-spacing: -0.008em; }
   .log-badge {
     display: inline-block;
-    padding: 2px 10px;
+    padding: 2px 9px;
     border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
+    font: 600 10px/1.5 var(--mono);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     background: var(--accent-soft);
-    color: var(--accent);
+    color: var(--accent-d);
   }
-  .log-entry p { margin-top: 8px; font-size: 0.95rem; }
-  .log-score { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
-  .log-score strong { color: var(--accent); }
+  .log-entry p { margin-top: 8px; font-size: 0.94rem; }
+  .log-score { margin-top: 8px; font: 500 12px/1.5 var(--mono); color: var(--muted); }
+  .log-score strong { color: var(--accent-d); font-weight: 600; }
 </style>
 
 <!-- Worked example — filled entries as they land in the vault (earliest first). -->
