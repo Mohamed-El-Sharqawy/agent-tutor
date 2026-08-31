@@ -1,6 +1,6 @@
 ---
 name: agent-tutor-review
-version: 2
+version: 3
 description: Spaced-repetition review sessions and retention tracking for subjects learned with the agent-tutor skill. Recall-first practice over lesson notes, adaptive FSRS-style interval scheduling (uncapped by default), honest retention verdicts, and a mixed mini-quiz per session. Use when the user wants to revise or practice old topics, check what they remember, or when the dashboard shows notes up for review.
 license: MIT
 ---
@@ -47,7 +47,10 @@ Notes are never "done": a long interval just means the topic comes up rarely. Le
 
 ## Running a review session
 
-1. Read `Learning/Dashboard.md` → **Up for review** section (notes whose next review date has passed). If the dashboard looks stale, scan `Learning/<Subject>/notes/*/` frontmatter directly.
+1. Read the review queue from the dashboard:
+   - **Markdown mode** (default): read `Learning/Dashboard.md` → **Up for review** section (notes whose next review date has passed).
+   - **Html mode** (`output_format.dashboard: html` in the learner profile): read the `agent-tutor-state` JSON island at the top of `Learning/Dashboard.html`'s `<body>` — its `due_notes[]` entries (note, due date, interval) are the queue. Map each entry back to its actual note file under `Learning/<Subject>/notes/` (island labels are display names); the thin `Dashboard.md` hub is a signpost — never parse it. No `Dashboard.html` yet → the fallback below applies.
+   - If the dashboard looks stale in either mode, scan `Learning/<Subject>/notes/*/` frontmatter directly — note `review:` frontmatter is always the scheduling authority.
 2. **Recall first, always.** For each note: ask the user to explain the topic from memory *before* showing anything. ("Explain closures to me as if I'd never heard of them.")
 3. Judge the recall against the note's key takeaways, then apply the schedule table:
    - **Solid** → apply the solid row.
@@ -74,3 +77,5 @@ Keep the **Up for review** section current: one bullet per due note, sorted by d
 ```
 
 Remove bullets after the review is logged. This list is what the tutor reads at session start, so it must be true.
+
+**Html mode** (`output_format.dashboard: html` in the learner profile): the queue lives in `Dashboard.html` — the **Up for review** section and the `due_notes[]` of the island read in step 1. Update it at the end of the session by regenerating the html dashboard whole — a fresh island, overview and subject focus pages together, plus the thin `Dashboard.md` hub's counters, exactly the update-the-Dashboard moment every session ends with; never hand-patch the html.
