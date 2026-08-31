@@ -62,7 +62,7 @@ Use SVG when Mermaid can't express it: spatial layouts, annotated figures, simpl
 
 The Dashboard is not a report. Text tables carry the data (links, dates); charts carry the state at a glance. **All dashboard charts are SVG images** — full color control, they render in Obsidian, on GitHub, and in any browser, and the agent writes them with plain file tools. Mermaid stays for lesson diagrams (section 2); the Dashboard grid is SVG only, because Mermaid code blocks cannot sit inside a table cell.
 
-**Html-mode dashboards are the exception** (`output_format.dashboard: html` in the learner profile): their charts are the inline SVG progress rings rendered by the tutor skill's html dashboard templates (Cards overview + per-subject focus pages) — no `assets/` chart files, no markdown grid, nothing from this section. The palette and recipes below apply to markdown dashboards (the default).
+**Html-mode dashboards are the exception** (`output_format.dashboard: html` in the learner profile): their charts are the inline SVG progress rings rendered by the tutor skill's html dashboard templates (Cards overview + per-subject focus pages) — no `assets/` chart files, no markdown grid, none of the recipes below. The fixed palette carries over: the html rings use the same hues. Everything else in this section applies to markdown dashboards (the default).
 
 ### Fixed palette — vibrant, no variety
 
