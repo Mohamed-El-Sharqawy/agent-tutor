@@ -1,0 +1,82 @@
+<!doctype html>
+<!-- PROTOTYPE — variant B (Ledger). Throwaway UI study; the real template comes from the winning variant. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
+<title>Learning Dashboard — B · Ledger</title>
+<style>
+  :root { --bg:#faf9f7; --ink:#1c1917; --dim:#78716c; --line:#e7e5e4; --accent:#0f766e; --barbg:#e7e5e4; --urgent:#b45309; --urgent-bg:#fef3c7; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --ink:#faf9f7; --dim:#a8a29e; --line:#33302c; --accent:#5eead4; --barbg:#33302c; --urgent:#fbbf24; --urgent-bg:#3a2d10; } }
+  * { box-sizing:border-box; margin:0; }
+  body { font:15px/1.6 ui-serif,Georgia,"Times New Roman",serif; background:var(--bg); color:var(--ink); padding:36px 26px 100px; max-width:860px; margin:0 auto; }
+  .masthead { border-bottom:3px double var(--line); padding-bottom:10px; display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+  .masthead h1 { font-size:24px; font-style:italic; }
+  .masthead .nums { margin-left:auto; font-family:ui-monospace,Consolas,monospace; font-size:13px; color:var(--dim); }
+  .standfirst { font-family:ui-monospace,Consolas,monospace; font-size:13.5px; color:var(--dim); padding:10px 0 0; }
+  .standfirst b { color:var(--ink); font-size:15px; }
+  h2 { font-size:13px; font-family:ui-monospace,Consolas,monospace; text-transform:uppercase; letter-spacing:.14em; color:var(--dim); margin:30px 0 8px; border-bottom:1px solid var(--line); padding-bottom:4px; }
+  table { width:100%; border-collapse:collapse; font-family:ui-monospace,Consolas,monospace; font-size:13.5px; }
+  th { text-align:left; color:var(--dim); font-weight:400; padding:4px 10px 4px 0; border-bottom:1px solid var(--line); }
+  td { padding:9px 10px 9px 0; border-bottom:1px solid var(--line); vertical-align:middle; }
+  .bar { width:150px; height:8px; background:var(--barbg); border-radius:2px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--accent); }
+  td.pct { font-weight:700; color:var(--accent); }
+  td.name { font-family:ui-serif,Georgia,serif; font-size:15.5px; font-weight:700; }
+  .urgent { border:1px solid var(--urgent); background:var(--urgent-bg); border-radius:6px; padding:12px 16px; margin-top:4px; }
+  .urgent .head { font-family:ui-monospace,Consolas,monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--urgent); margin-bottom:6px; }
+  .urgent ul { margin:0; padding-left:18px; }
+  .urgent li { padding:1px 0; }
+  .loglines { font-family:ui-monospace,Consolas,monospace; font-size:13px; }
+  .loglines div { padding:5px 0; border-bottom:1px dotted var(--line); color:var(--ink); }
+  .loglines .d { color:var(--dim); display:inline-block; width:86px; }
+  #bar { position:fixed; bottom:14px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--bg); border-radius:99px; padding:7px 14px; font-size:12.5px; display:flex; gap:12px; box-shadow:0 4px 16px rgba(0,0,0,.25); z-index:9; font-family:system-ui,sans-serif; }
+  #bar a { color:inherit; text-decoration:none; font-weight:600; opacity:.65; } #bar a.cur { opacity:1; text-decoration:underline; }
+</style>
+</head>
+<body>
+<!-- agent-tutor-state: {"updated":"2026-08-31","subjects":[{"name":"Machine Learning","phase":2,"phases":4,"topics_done":12,"topics_total":28,"next":"07-gradient-descent","due":3,"last_activity":"2026-08-30"},{"name":"Rust","phase":1,"phases":3,"topics_done":4,"topics_total":15,"next":"05-ownership","due":1,"last_activity":"2026-08-29"}],"due_notes":[{"note":"ML · 06-backprop","due":"2026-08-31","interval":"6d"},{"note":"ML · 04-cnn-basics","due":"2026-09-01","interval":"12d"},{"note":"Rust · 03-patterns","due":"2026-08-31","interval":"3d"}],"recent":["2026-08-30 — ML: gradient descent lesson, quiz 7/8","2026-08-29 — Rust: ownership basics lesson, quiz 6/8","2026-08-28 — ML review: backprop solid, interval 6d"]} -->
+
+<div class="masthead">
+  <h1>The Learning Ledger</h1>
+  <span class="nums">updated 2026-08-31 · agent-tutor</span>
+</div>
+<p class="standfirst"><b>2</b> subjects · <b>16/43</b> topics complete · <b>3</b> reviews due · streak <b>2d</b></p>
+
+<h2>Subjects</h2>
+<table>
+  <tr><th>Subject</th><th>Progress</th><th></th><th>Phase</th><th>Next</th><th>Last</th></tr>
+  <tr>
+    <td class="name">Machine Learning</td>
+    <td><div class="bar"><i style="width:43%"></i></div></td>
+    <td class="pct">43%</td>
+    <td>2/4</td><td>07-gradient-descent</td><td>08-30</td>
+  </tr>
+  <tr>
+    <td class="name">Rust</td>
+    <td><div class="bar"><i style="width:27%"></i></div></td>
+    <td class="pct">27%</td>
+    <td>1/3</td><td>05-ownership</td><td>08-29</td>
+  </tr>
+</table>
+
+<h2>Due now</h2>
+<div class="urgent">
+  <div class="head">3 notes scheduled</div>
+  <ul>
+    <li><strong>ML · 06-backprop</strong> — due today · 6d interval</li>
+    <li><strong>Rust · 03-patterns</strong> — due today · 3d interval</li>
+    <li><strong>ML · 04-cnn-basics</strong> — due 2026-09-01 · 12d interval</li>
+  </ul>
+</div>
+
+<h2>Record</h2>
+<div class="loglines">
+  <div><span class="d">2026-08-30</span> ML: gradient descent lesson, quiz 7/8</div>
+  <div><span class="d">2026-08-29</span> Rust: ownership basics lesson, quiz 6/8</div>
+  <div><span class="d">2026-08-28</span> ML review: backprop solid, interval 6d</div>
+</div>
+
+<div id="bar">PROTOTYPE&nbsp; <a href="dashboard-a.html">A · Cards</a> <a href="dashboard-b.html" class="cur">B · Ledger</a> <a href="dashboard-c.html">C · Focus</a> <a href="log-entry-sample.html">Log</a></div>
+</body>
+</html>
