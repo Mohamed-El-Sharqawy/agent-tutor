@@ -56,4 +56,4 @@ tags: [learning, profile]
 ## 🔍 Observed evidence
 
 - 2026-02-16 — Profile created (intake interview).
-- 2026-02-19 — Ownership quiz 8/8; JS-analogy callouts got read first, formal sections skimmed → keep examples leading.
+- 2026-02-19 — Ownership quiz 6/8; JS-analogy callouts got read first, formal sections skimmed → keep examples leading.
