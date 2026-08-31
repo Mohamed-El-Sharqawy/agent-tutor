@@ -17,7 +17,9 @@
  *                           self-contained (no scripts, no external refs);
  *                           dashboard pages additionally carry a parsable
  *                           agent-tutor-state island + color-scheme meta and
- *                           resolve every relative page-to-page href
+ *                           resolve every relative page-to-page href;
+ *                           log fragment files (logs/ + their template) stay
+ *                           bare body-level markup and carry no island
  *
  * Pure node stdlib — no dependencies, no network. Exit 1 with a fix hint
  * for every failure.
@@ -251,7 +253,10 @@ for (const file of mdFiles(issueDir)) {
 // Contract (from the html-dashboard spec): pages are static HTML + inline CSS,
 // consumable by Obsidian's HTML Reader plugin, a browser, or an agent parser.
 // Dashboard pages carry their state in an `agent-tutor-state` JSON-comment
-// island — the agent's single state read at session start.
+// island — the agent's single state read at session start. Log fragment files
+// are the opposite shape: bare body-level fragments that stack through the day
+// in one daily file — appendable (no document tags) and stateless (no island;
+// logs are history, dashboards own the island).
 
 const treeFiles = [...walk(join(root, "skills")), ...walk(join(root, "examples"))];
 const htmlFiles = treeFiles.filter((p) => p.endsWith(".html"));
@@ -264,7 +269,14 @@ const ISLAND_KEYS = ["updated", "subjects", "due_notes", "recent"];
 const ISLAND_SCHEMA = `Island schema: { ${ISLAND_KEYS.join(", ")} }.`;
 const islandHint = 'One JSON object: <!-- agent-tutor-state {...} -->.';
 
+// Log fragment files: the daily html logs under logs/ plus their template.
+const isLogFragment = (file) => {
+  const rel = show(file);
+  return /(^|\/)logs\//.test(rel) || /\/templates\/log[-a-z]*\.html$/.test(rel);
+};
+
 let islandCount = 0;
+let fragmentCount = 0;
 for (const file of htmlFiles) {
   const html = readFileSync(file, "utf8");
   const name = show(file);
@@ -285,9 +297,16 @@ for (const file of htmlFiles) {
   for (const m of html.matchAll(/url\(\s*["']?\s*((?:https?:)?\/\/[^)"'\s]+)/gi))
     fail("html", name, `Remote CSS reference: ${m[1]}`, "Inline the asset (data: URIs are fine) or drop it.");
 
-  // Island rule — scoped to dashboard pages (island carriers).
+  // Island rule — scoped to dashboard pages (island carriers). Log fragments
+  // are the inverse: an island there is state hiding in history — a failure.
   const island = /<!--\s*agent-tutor-state\s+([\s\S]*?)-->/.exec(html);
-  if (island) {
+  if (isLogFragment(file)) {
+    fragmentCount++;
+    if (island)
+      fail("html", name, "agent-tutor-state island in a log fragment file.", "Logs are history, never state — dashboards own the island. Remove it from the log.");
+    if (/<!doctype|<html[\s>]|<head[\s>]|<body[\s>]/i.test(html))
+      fail("html", name, "Document-level tags (<!DOCTYPE>/<html>/<head>/<body>) in a log fragment file.", "Fragments are bare body-level markup so entries can stack through the day; keep document tags out.");
+  } else if (island) {
     islandCount++;
     let state;
     let parsed = false;
@@ -346,7 +365,7 @@ for (const file of htmlFiles) {
   }
   if (linkChecked) note(`    ${name}: ${linkChecked} relative link(s) resolved`);
 }
-note(`html: ${htmlFiles.length} file(s) linted, ${islandCount} dashboard island(s)`);
+note(`html: ${htmlFiles.length} file(s) linted, ${islandCount} dashboard island(s), ${fragmentCount} log fragment file(s)`);
 
 // --- report -------------------------------------------------------------------
 
