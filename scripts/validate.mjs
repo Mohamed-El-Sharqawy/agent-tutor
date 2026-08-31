@@ -13,6 +13,10 @@
  *                           (rules ported from extensions/visual-tools/mermaid.ts)
  *   6. vault wikilinks    — every [[link]] in examples/vault resolves
  *   7. issue templates    — frontmatter with name + labels
+ *   8. html artifacts     — every .html under skills/ and examples/ is
+ *                           self-contained (no scripts, no external refs);
+ *                           dashboard pages additionally carry a parsable
+ *                           agent-tutor-state island + color-scheme meta
  *
  * Pure node stdlib — no dependencies, no network. Exit 1 with a fix hint
  * for every failure.
@@ -240,6 +244,72 @@ for (const file of mdFiles(issueDir)) {
   else if (!fm.labels)
     fail("issue-templates", show(file), "No labels: in the template.", "Add labels: [...], e.g. good first issue feeders.");
 }
+
+// --- 8. html artifacts: self-contained pages + dashboard island --------------
+//
+// Contract (from the html-dashboard spec): pages are static HTML + inline CSS,
+// consumable by Obsidian's HTML Reader plugin, a browser, or an agent parser.
+// Dashboard pages carry their state in an `agent-tutor-state` JSON-comment
+// island — the agent's single state read at session start.
+
+const htmlFiles = [...walk(join(root, "skills")), ...walk(join(root, "examples"))]
+  .filter((p) => p.endsWith(".html"));
+
+const ISLAND_KEYS = ["updated", "subjects", "due_notes", "recent"];
+const ISLAND_SCHEMA = `Island schema: { ${ISLAND_KEYS.join(", ")} }.`;
+const islandHint = 'One JSON object: <!-- agent-tutor-state {...} -->.';
+
+let islandCount = 0;
+for (const file of htmlFiles) {
+  const html = readFileSync(file, "utf8");
+  const name = show(file);
+
+  if (/<script\b/i.test(html))
+    fail("html", name, "Found <script> — pages must be static HTML+CSS.", "Remove it; all interactivity is plain links.");
+  if (/<\s*(iframe|object|embed)\b/i.test(html))
+    fail("html", name, "Found <iframe>/<object>/<embed> — they can pull in executable content.", "Remove it; link out instead.");
+  if (/\son[a-z]+\s*=/.test(html))
+    fail("html", name, "Inline event handler (on*=) — script in disguise.", "Use plain links; no JavaScript anywhere.");
+
+  for (const m of html.matchAll(/\b(?:src|srcset|data)\s*=\s*["']?\s*((?:https?:)?\/\/[^"'\s>]+)/gi))
+    fail("html", name, `Remote resource reference: ${m[1]}`, "Pages are self-contained — inline the asset or drop it.");
+  if (/<link\b/i.test(html))
+    fail("html", name, "Found <link> — styles must be inline in a <style> block.", "Replace with an inline <style> block.");
+  if (/@import\b/i.test(html))
+    fail("html", name, "Found @import — styles must be inline.", "Inline the styles.");
+  for (const m of html.matchAll(/url\(\s*["']?\s*((?:https?:)?\/\/[^)"'\s]+)/gi))
+    fail("html", name, `Remote CSS reference: ${m[1]}`, "Inline the asset (data: URIs are fine) or drop it.");
+
+  // Island rule — scoped to dashboard pages (island carriers).
+  const island = /<!--\s*agent-tutor-state\s+([\s\S]*?)-->/.exec(html);
+  if (island) {
+    islandCount++;
+    let state;
+    let parsed = false;
+    try {
+      state = JSON.parse(island[1].trim());
+      parsed = true;
+    } catch (e) {
+      fail("html", name, `agent-tutor-state island does not parse as JSON (${e.message}).`, islandHint);
+    }
+    if (parsed) {
+      if (state === null || typeof state !== "object" || Array.isArray(state)) {
+        fail("html", name, "Island JSON must be one object.", ISLAND_SCHEMA);
+        continue;
+      }
+      for (const key of ISLAND_KEYS)
+        if (!(key in state))
+          fail("html", name, `Island is missing "${key}".`, ISLAND_SCHEMA);
+      for (const key of ["subjects", "recent"])
+        if (!Array.isArray(state[key]))
+          fail("html", name, `Island "${key}" must be an array (possibly empty).`, ISLAND_SCHEMA);
+    }
+    if (!/<meta\s+name=["']?color-scheme["']?\s+content=/i.test(html) &&
+        !/<meta\s+content=["'][^"']*["']\s+name=["']?color-scheme["']?/i.test(html))
+      fail("html", name, "Missing <meta name=\"color-scheme\">.", 'Add <meta name="color-scheme" content="light dark">.');
+  }
+}
+note(`html: ${htmlFiles.length} file(s) linted, ${islandCount} dashboard island(s)`);
 
 // --- report -------------------------------------------------------------------
 
