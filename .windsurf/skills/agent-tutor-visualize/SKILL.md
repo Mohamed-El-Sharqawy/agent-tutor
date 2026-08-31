@@ -1,6 +1,6 @@
 ---
 name: agent-tutor-visualize
-version: 1
+version: 2
 description: Build diagrams and visual explanations for learning notes - Mermaid diagram selection and syntax rules plus SVG illustration guidelines for lesson notes in a markdown vault. Use when a concept needs a picture such as flows, hierarchies, timelines, comparisons, or spatial layouts, and when creating or embedding diagrams in lesson notes.
 license: MIT
 ---
@@ -61,6 +61,8 @@ Use SVG when Mermaid can't express it: spatial layouts, annotated figures, simpl
 ## 4. Dashboard charts
 
 The Dashboard is not a report. Text tables carry the data (links, dates); charts carry the state at a glance. **All dashboard charts are SVG images** — full color control, they render in Obsidian, on GitHub, and in any browser, and the agent writes them with plain file tools. Mermaid stays for lesson diagrams (section 2); the Dashboard grid is SVG only, because Mermaid code blocks cannot sit inside a table cell.
+
+**Html-mode dashboards are the exception** (`output_format.dashboard: html` in the learner profile): their charts are the inline SVG progress rings rendered by the tutor skill's html dashboard templates (Cards overview + per-subject focus pages) — no `assets/` chart files, no markdown grid, nothing from this section. The palette and recipes below apply to markdown dashboards (the default).
 
 ### Fixed palette — vibrant, no variety
 
