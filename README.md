@@ -200,14 +200,14 @@ Dashboards and logs do not have to be tables. One block in the learner profile p
 ```yaml
 output_format:
   dashboard: html   # markdown (default) | html
-  logs: html        # markdown | html
+  logs: markdown    # markdown | html
 ```
 
 [![The HTML dashboard in a browser](demo/screenshots/dashboard-html.png)](demo/screenshots/dashboard-html.png)
 
 *Figure: the HTML dashboard from the [html-mode sample vault](examples/vault-html/). A stat row, a per-subject card with a progress ring, the review queue, and recent activity. Every card links to a per-subject focus page, and session logs become styled daily entries in the same look.*
 
-You choose it at intake (html is the suggested default), it applies to every subject, and you can switch at any time — the next dashboard write appears in the new format and the old one is kept as a dated archive. Absent block means markdown: upgrading never changes an existing vault until you opt in.
+You choose it at intake (the tutor suggests html), it applies to every subject, and you can switch at any time — the next dashboard write appears in the new format and the old one is kept as a dated archive. Absent block means markdown: upgrading never changes an existing vault until you opt in.
 
 The HTML pages are plain, self-contained files: no JavaScript, no external resources, inline CSS, and automatic light/dark theming. The tutor regenerates them whole at every update, and your plan checkboxes and note frontmatter stay the source of truth — the pages are a view, never a database. Lessons, plans, and quiz reports stay markdown in every mode.
 
