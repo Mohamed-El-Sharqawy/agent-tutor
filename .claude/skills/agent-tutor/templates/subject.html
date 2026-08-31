@@ -12,14 +12,17 @@
     {{placeholders}} and replace the worked-example state island at the top of
     <body> with live data — the SAME island as the overview page (full schema,
     numbers as numbers); this page renders one subject's slice of it.
-    Slices: due notes = the island's due_notes[] entries belonging to this
-    subject (same "Subject · note" naming the overview queue uses); activity =
-    the recent[] lines belonging to this subject; next topics = the next
-    unfinished topics from the subject's plan.md (first one = the island's
-    "next"). Delete sections that have no content.
+    Slices: due notes = the island's due_notes[] entries you gathered for this
+    subject in the recipe's gather step — pick them by what they are, never by
+    string-matching the display labels (the "Subject · note" naming keeps the
+    overview queue and this page consistent); activity = the recent[] lines
+    gathered for this subject; next topics = the next unfinished topics from
+    the subject's plan.md (first one = the island's "next"). Delete sections
+    that have no content.
     File name: Learning/subjects/{{subject-slug}}.html — slug = subject name,
     lowercase, spaces/punctuation → hyphens (e.g. "Machine Learning" →
-    "machine-learning"). The overview card and the hub link here with the
+    "machine-learning"); two subjects colliding on one slug → append -2, -3, ….
+    The overview card and the hub link here with the
     relative href "subjects/{{subject-slug}}.html"; the back link is
     "../Dashboard.html" ({{DASHBOARD_HREF}} stands in for it so the template
     stays validator-clean).
