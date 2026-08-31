@@ -4,9 +4,9 @@ status: active
 created: {{DATE}}
 updated: {{DATE}}
 tags: [learning, profile]
-# output_format:        # optional — rendering choice; absent = markdown everywhere
+# output_format:        # written explicitly at intake (question 11) — absent in old profiles = markdown everywhere
 #   dashboard: html     # markdown | html — Cards-style self-contained dashboard
-#   logs: markdown      # markdown | html
+#   logs: html          # markdown | html — styled daily log entries
 ---
 
 > [!abstract] Who this file is for
