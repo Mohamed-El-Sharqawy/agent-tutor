@@ -4,6 +4,9 @@ status: active
 created: {{DATE}}
 updated: {{DATE}}
 tags: [learning, profile]
+# output_format:        # optional — rendering choice; absent = markdown everywhere
+#   dashboard: html     # markdown | html — Cards-style self-contained dashboard
+#   logs: markdown      # markdown | html
 ---
 
 > [!abstract] Who this file is for

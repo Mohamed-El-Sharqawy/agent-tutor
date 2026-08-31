@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Learning Dashboard</title>
+  <!--
+    Cards overview — the agent-tutor html-mode dashboard. Regenerate the WHOLE
+    file at every update-the-Dashboard moment; never hand-patch a previous copy.
+    Fill the {{placeholders}} (one subject card per active subject; delete empty
+    sections) and replace the worked-example state island at the top of <body>
+    with live data — same schema, numbers as numbers. Keep this page
+    self-contained: inline CSS only, no scripts, no external references. Chart
+    strokes ride CSS variables so the page re-themes with prefers-color-scheme.
+    Ring math: circumference C = 2π × r = 282.7 for r = 45; dash arc =
+    {{done_fraction}} × C (e.g. 12/28 topics → 121.1 282.7).
+  -->
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --card: #ffffff;
+      --ink: #18181b;
+      --muted: #6b7280;
+      --line: #e4e4e7;
+      --accent: #0891b2;
+      --accent-soft: #ecfeff;
+      --warn: #b45309;
+      --warn-soft: #fef3c7;
+      --track: #e4e4e7;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #101014;
+        --card: #1b1b22;
+        --ink: #f4f4f5;
+        --muted: #a1a1aa;
+        --line: #2b2b34;
+        --accent: #22d3ee;
+        --accent-soft: #103a47;
+        --warn: #fbbf24;
+        --warn-soft: #3b2f0b;
+        --track: #2b2b34;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      padding: 24px 16px 48px;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    header.top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    h1 { font-size: 1.6rem; letter-spacing: -0.02em; }
+    .updated { color: var(--muted); font-size: 0.9rem; }
+    h2 { font-size: 1.05rem; margin-bottom: 12px; }
+    section { margin-top: 28px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+    .stat { text-align: center; padding: 14px 8px; }
+    .stat strong { display: block; font-size: 1.5rem; letter-spacing: -0.02em; }
+    .stat span { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .subject header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+    .subject h3 { font-size: 1rem; }
+    .badge {
+      display: inline-block; padding: 2px 10px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 600;
+      background: var(--accent-soft); color: var(--accent);
+    }
+    .badge.due { background: var(--warn-soft); color: var(--warn); }
+    .ring-row { display: flex; align-items: center; gap: 16px; }
+    .ring-row svg { width: 104px; height: 104px; flex: none; }
+    .ring-track { stroke: var(--track); }
+    .ring-arc { stroke: var(--accent); }
+    .ring-label { fill: var(--accent); font-size: 26px; font-weight: 700; }
+    .meta { list-style: none; padding: 0; font-size: 0.92rem; }
+    .meta li { display: flex; gap: 8px; padding: 3px 0; }
+    .meta li span { color: var(--muted); min-width: 96px; }
+    .queue, .activity { list-style: none; padding: 0; }
+    .queue li, .activity li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 0.95rem; }
+    .queue li:first-child, .activity li:first-child { border-top: none; }
+    .queue em, .activity time { color: var(--muted); font-style: normal; font-size: 0.85rem; }
+    .empty { color: var(--muted); font-size: 0.92rem; }
+    footer { margin-top: 32px; color: var(--muted); font-size: 0.8rem; text-align: center; }
+    @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+<!-- agent-tutor-state {"updated":"2026-08-31","subjects":[{"name":"Machine Learning","phase":2,"phases":4,"topics_done":12,"topics_total":28,"next":"07-gradient-descent","due":3,"last_activity":"2026-08-30"}],"due_notes":[{"note":"ML · 06-backprop","due":"2026-08-31","interval":"6d"}],"recent":["2026-08-30 — ML: gradient descent lesson, quiz 7/8"]} -->
+
+<div class="wrap">
+  <header class="top">
+    <h1>🎓 Learning Dashboard</h1>
+    <p class="updated">Updated {{DATE}}</p>
+  </header>
+
+  <section class="stats" aria-label="Overview">
+    <div class="card stat"><strong>{{active}}</strong><span>Active subjects</span></div>
+    <div class="card stat"><strong>{{done}}/{{all}}</strong><span>Topics done</span></div>
+    <div class="card stat"><strong>{{due_count}}</strong><span>Notes due</span></div>
+    <div class="card stat"><strong>{{date}}</strong><span>Last activity</span></div>
+  </section>
+
+  <section aria-label="Subjects">
+    <h2>📚 Active subjects</h2>
+    <div class="subjects">
+      <!-- One card per active subject. done_fraction = topics_done ÷ topics_total × 282.7 (r = 45); e.g. 12/28 → "121.1 282.7". -->
+      <article class="card subject">
+        <header>
+          <h3>{{subject}}</h3>
+          <span class="badge">Phase {{n}}/{{total}}</span>
+        </header>
+        <div class="ring-row">
+          <svg viewBox="0 0 120 120" role="img" aria-label="{{subject}} progress {{pct}}%">
+            <circle class="ring-track" cx="60" cy="60" r="45" stroke-width="12" fill="none"/>
+            <circle class="ring-arc" cx="60" cy="60" r="45" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="{{done_fraction}} 282.7" transform="rotate(-90 60 60)"/>
+            <text class="ring-label" x="60" y="69" text-anchor="middle">{{pct}}%</text>
+          </svg>
+          <ul class="meta">
+            <li><span>Topics</span>{{done}}/{{all}}</li>
+            <li><span>Next up</span>{{next topic}}</li>
+            <li><span>Due</span>{{due notes}}</li>
+            <li><span>Last activity</span>{{date}}</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-label="Review queue">
+    <h2>🗓️ Up for review</h2>
+    <div class="card">
+      <ul class="queue">
+        <!-- One item per due note, sorted by due date. Empty → the .empty line. -->
+        <li><span class="badge due">due {{date}}</span> {{subject}} · {{note}} <em>{{interval}} interval</em></li>
+        <!-- <li class="empty">Nothing due — keep the streak.</li> -->
+      </ul>
+    </div>
+  </section>
+
+  <section aria-label="Recent activity">
+    <h2>📝 Recent activity</h2>
+    <div class="card">
+      <ul class="activity">
+        <li><time>{{date}}</time> — {{one-line summary of the session}}</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>Auto-generated by agent-tutor — regenerated whole at every update; hand edits are lost.</footer>
+</div>
+</body>
+</html>
