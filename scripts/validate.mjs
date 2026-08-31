@@ -16,14 +16,15 @@
  *   8. html artifacts     — every .html under skills/ and examples/ is
  *                           self-contained (no scripts, no external refs);
  *                           dashboard pages additionally carry a parsable
- *                           agent-tutor-state island + color-scheme meta
+ *                           agent-tutor-state island + color-scheme meta and
+ *                           resolve every relative page-to-page href
  *
  * Pure node stdlib — no dependencies, no network. Exit 1 with a fix hint
  * for every failure.
  */
 
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
-import { join, dirname, relative } from "node:path";
+import { join, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -252,8 +253,12 @@ for (const file of mdFiles(issueDir)) {
 // Dashboard pages carry their state in an `agent-tutor-state` JSON-comment
 // island — the agent's single state read at session start.
 
-const htmlFiles = [...walk(join(root, "skills")), ...walk(join(root, "examples"))]
-  .filter((p) => p.endsWith(".html"));
+const treeFiles = [...walk(join(root, "skills")), ...walk(join(root, "examples"))];
+const htmlFiles = treeFiles.filter((p) => p.endsWith(".html"));
+// Exact-case path set: an href must match the on-disk path's casing too —
+// existsSync is case-insensitive on Windows, so a Subjects/x.html link would
+// pass a dev machine and then break the Linux CI run.
+const treePaths = new Set(treeFiles.map((p) => resolve(p)));
 
 const ISLAND_KEYS = ["updated", "subjects", "due_notes", "recent"];
 const ISLAND_SCHEMA = `Island schema: { ${ISLAND_KEYS.join(", ")} }.`;
@@ -268,7 +273,7 @@ for (const file of htmlFiles) {
     fail("html", name, "Found <script> — pages must be static HTML+CSS.", "Remove it; all interactivity is plain links.");
   if (/<\s*(iframe|object|embed)\b/i.test(html))
     fail("html", name, "Found <iframe>/<object>/<embed> — they can pull in executable content.", "Remove it; link out instead.");
-  if (/\son[a-z]+\s*=/.test(html))
+  if (/<[a-z][^>]*\son[a-z]+\s*=/i.test(html))
     fail("html", name, "Inline event handler (on*=) — script in disguise.", "Use plain links; no JavaScript anywhere.");
 
   for (const m of html.matchAll(/\b(?:src|srcset|data)\s*=\s*["']?\s*((?:https?:)?\/\/[^"'\s>]+)/gi))
@@ -308,6 +313,38 @@ for (const file of htmlFiles) {
         !/<meta\s+content=["'][^"']*["']\s+name=["']?color-scheme["']?/i.test(html))
       fail("html", name, "Missing <meta name=\"color-scheme\">.", 'Add <meta name="color-scheme" content="light dark">.');
   }
+
+  // Portable relative links — every generated page navigates with plain
+  // relative hrefs (overview ↔ subject pages, back links). Any href pointing
+  // at a local file must resolve next to the page, or the link is broken in
+  // Obsidian's HTML Reader and in a browser alike. Skipped: fragments,
+  // schemes (https:, mailto:, …), data:, and {{placeholder}} hrefs in
+  // templates (the same skip the mermaid check applies to template fences) —
+  // but a generated page that still carries a placeholder href is a failure,
+  // the unfilled-placeholder leak this skip would otherwise hide.
+  const isTemplate = name.startsWith("skills/");
+  let linkChecked = 0;
+  for (const m of html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/gi)) {
+    const href = m[1].trim();
+    if (href.includes("{{")) {
+      if (!isTemplate)
+        fail("html", name, `Unfilled template placeholder in href: ${href}`, "Generated pages must fill every template placeholder.");
+      continue;
+    }
+    if (href.startsWith("#")) continue;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(href)) continue; // scheme: https:, mailto:, data:, …
+    linkChecked++;
+    let target;
+    try {
+      target = resolve(dirname(file), decodeURIComponent(href.split("#")[0]));
+    } catch {
+      fail("html", name, `Malformed href (bad percent-encoding): ${href}`, "Percent-encode special characters in link targets.");
+      continue;
+    }
+    if (!treePaths.has(target))
+      fail("html", name, `Relative link target missing: ${href}`, "Links between generated pages must be relative and resolve in place.");
+  }
+  if (linkChecked) note(`    ${name}: ${linkChecked} relative link(s) resolved`);
 }
 note(`html: ${htmlFiles.length} file(s) linted, ${islandCount} dashboard island(s)`);
 

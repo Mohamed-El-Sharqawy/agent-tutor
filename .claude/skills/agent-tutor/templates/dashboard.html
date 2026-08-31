@@ -7,12 +7,16 @@
   <title>Learning Dashboard</title>
   <!--
     Cards overview — the agent-tutor html-mode dashboard. Regenerate the WHOLE
-    file at every update-the-Dashboard moment; never hand-patch a previous copy.
-    Fill the {{placeholders}} (one subject card per active subject; delete empty
-    sections) and replace the worked-example state island at the top of <body>
-    with live data — same schema, numbers as numbers. Keep this page
-    self-contained: inline CSS only, no scripts, no external references. Chart
-    strokes ride CSS variables so the page re-themes with prefers-color-scheme.
+    file at every update-the-Dashboard moment — together with one focus page
+    per active subject (templates/subject.html, Learning/subjects/<slug>.html);
+    never hand-patch a previous copy. Fill the {{placeholders}} (one subject
+    card per active subject; delete empty sections) and replace the
+    worked-example state island at the top of <body> with live data — same
+    schema, numbers as numbers. Subject cards link to their focus page with a
+    portable relative href ("subjects/<slug>.html"; slug = subject name,
+    lowercase, spaces/punctuation → hyphens; collide → append -2, -3, …). Keep this page self-contained:
+    inline CSS only, no scripts, no external references. Chart strokes ride
+    CSS variables so the page re-themes with prefers-color-scheme.
     Ring math: circumference C = 2π × r = 282.7 for r = 45; dash arc =
     {{done_fraction}} × C (e.g. 12/28 topics → 121.1 282.7).
   -->
@@ -67,6 +71,8 @@
     .stat strong { display: block; font-size: 1.5rem; letter-spacing: -0.02em; }
     .stat span { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
     .subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    a.subject { display: block; text-decoration: none; color: inherit; }
+    a.subject:hover { border-color: var(--accent); }
     .subject header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
     .subject h3 { font-size: 1rem; }
     .badge {
@@ -111,8 +117,9 @@
   <section aria-label="Subjects">
     <h2>📚 Active subjects</h2>
     <div class="subjects">
-      <!-- One card per active subject. done_fraction = topics_done ÷ topics_total × 282.7 (r = 45); e.g. 12/28 → "121.1 282.7". -->
-      <article class="card subject">
+      <!-- One card per active subject. done_fraction = topics_done ÷ topics_total × 282.7 (r = 45); e.g. 12/28 → "121.1 282.7".
+           The whole card is one link to the subject's focus page — subjects/<slug>.html, relative. -->
+      <a class="card subject" href="subjects/{{subject-slug}}.html">
         <header>
           <h3>{{subject}}</h3>
           <span class="badge">Phase {{n}}/{{total}}</span>
@@ -130,7 +137,7 @@
             <li><span>Last activity</span>{{date}}</li>
           </ul>
         </div>
-      </article>
+      </a>
     </div>
   </section>
 

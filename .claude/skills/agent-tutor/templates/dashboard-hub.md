@@ -15,4 +15,7 @@ tags: [learning, dashboard]
 - **Notes due for review:** {{due}}
 - **Updated:** {{DATE}}
 
+**Subject pages:** <!-- one relative link per active subject, matching the overview cards -->
+[{{subject}}](subjects/{{subject-slug}}.html)
+
 <!-- Thin hub (html mode only): links to the generated pages. Never a parallel dashboard — progress and scheduling stay in plan.md, note frontmatter, and the Dashboard.html state island. -->
